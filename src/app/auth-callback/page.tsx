@@ -26,12 +26,9 @@ const Page = () => {
   useEffect(() => {
     if (data?.success) {
       if (configId) {
-        console.log("entro en if")
         localStorage.removeItem("configurationId")
-        console.log("despues del if", configId)
         router.push(`/configure/preview?id=${configId}`)
       } else {
-        console.log("entro en else")
         router.push("/")
       }
     }

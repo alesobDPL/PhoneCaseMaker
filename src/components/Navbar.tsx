@@ -1,6 +1,5 @@
 import React from 'react'
 import MaxWidthWrapper from './MaxWidthWrapper'
-import Link from 'next/link'
 import { buttonVariants } from './ui/button';
 import { ArrowRight } from 'lucide-react';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
@@ -19,26 +18,26 @@ const Navbar = async () => {
     <MaxWidthWrapper>
         <div className='flex h-14 items-center justify-between border-b
         border-zinc-200'>
-            <Link href={"/"} className='flex z-40 font-semibold'>
+            <a href={"/"} className='flex z-40 font-semibold'>
                 case<span className='text-green-600'>cobra</span>
-            </Link>        
+            </a>        
             <div className='h-full flex items-center space-x-4'>
                 {user ? (
                     <>
-                        <Link href='/api/auth/logout' className={buttonVariants({
+                        <a href='/api/auth/logout' className={buttonVariants({
                             size: "sm",
                             variant: "ghost",
                         })}>
                             Sign out
-                        </Link>
+                        </a>
                         {isAdmin ? (
-                            <Link href='/api/auth/logout' className={buttonVariants({
+                            <a href='/api/auth/logout' className={buttonVariants({
                             size: "sm",
                             variant: "ghost",
                         })}>
                             Dashboard ✨
-                        </Link>): null}
-                        <Link 
+                        </a>): null}
+                        <a 
                         href='/configure/upload/' 
                         className={buttonVariants({
                             size: "sm",
@@ -46,26 +45,26 @@ const Navbar = async () => {
                         })}>
                             Create case
                             <ArrowRight className=" ml-1.5 h-5 w-5"/>
-                        </Link>
+                        </a>
                     </>
                 ) : (<>
-                    <Link href='/api/auth/register' className={buttonVariants({
+                    <a href='/api/auth/register' className={buttonVariants({
                         size: "sm",
                         variant: "ghost",
                     })}>
                         Sign up
-                    </Link>
+                    </a>
                     
-                    <Link 
+                    <a 
                     href='/api/auth/login/' 
                     className={buttonVariants({
                         size: "sm",
                         variant: "ghost",
                     })}>
                         Login
-                    </Link>
+                    </a>
                     <div className='h-8 w-px bg-zinc-200 hidden sm:block'/>
-                    <Link 
+                    <a 
                         href='/configure/upload/' 
                         className={buttonVariants({
                             size: "sm",
@@ -73,7 +72,7 @@ const Navbar = async () => {
                         })}>
                             Create case
                             <ArrowRight className=" ml-1.5 h-5 w-5"/>
-                        </Link>
+                        </a>
                 </>)}
             </div>
         </div>

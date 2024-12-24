@@ -21,7 +21,6 @@ export const ourFileRouter = {
       const {width, height} = imgMetadata
 
       if(!configId){
-        console.log("No hay configuración")
         const configuration = await db.configuration.create({
           data:{
             imageUrl:file.url,
@@ -32,7 +31,6 @@ export const ourFileRouter = {
 
         return {configId:configuration.id } 
       } else {
-        console.log("Hay configuración")
         const updateConfiguration = await db.configuration.update({
           where:{
             id: configId

@@ -21,7 +21,7 @@ const DesignPreview = ({configuration} : {configuration:Configuration}) => {
 const router = useRouter()
 const {toast} = useToast()
 const { id } = configuration
-const { user } = useKindeBrowserClient()
+const { user, isAuthenticated } = useKindeBrowserClient()
 const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(false)
 
 const [showConfetti, setShowConfetti] = useState<boolean>(false)
@@ -44,7 +44,6 @@ const {label : modelLabel} = MODELS.options.find(
     mutationKey:["get-checkout-session"],
     mutationFn: createCheckoutSession,
     onSuccess: ({url})=>{
-      console.log("onSuccess" , url)
       if(url)
         router.push(url)
       else throw new Error("Unable to retrieve payment URL.")
@@ -60,7 +59,7 @@ const {label : modelLabel} = MODELS.options.find(
 
 
   const handleCheckout = () =>{
-    if(user){
+    if(isAuthenticated){
       //Create payment session
       createPaymentSession({configId: id})
 
@@ -112,7 +111,7 @@ const {label : modelLabel} = MODELS.options.find(
            py-8 sm:grid-cols-2 sm:gap-x-6 sm:py-6 md:py-10'>
             <div>
               <p className='font-medium text-zinc-950'>Highlights</p>
-              <ol className='mt-3 text-zinc-700 list-dics list-inside'>
+              <ol className='mt-3 text-zinc-700 list-disc list-inside'>
                 <li>Wireless charging compatible</li>
                 <li>TPU shock absorption</li>
                 <li>Packaging made from recycled materials</li>
