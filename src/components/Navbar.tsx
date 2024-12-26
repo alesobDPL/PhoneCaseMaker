@@ -19,7 +19,7 @@ const Navbar = async () => {
         <div className='flex h-14 items-center justify-between border-b
         border-zinc-200'>
             <a href={"/"} className='flex z-40 font-semibold'>
-                case<span className='text-green-600'>cobra</span>
+                case<span className='text-green-600'>Maker</span>
             </a>        
             <div className='h-full flex items-center space-x-4'>
                 {user ? (
