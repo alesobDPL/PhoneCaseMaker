@@ -5,6 +5,9 @@ loadEnvFile('.env.example')
 
 export default defineConfig({
   testDir: './e2e',
+  globalSetup: './e2e/global-setup.ts',
+  // The explicit screenshots command opts in; normal runs exclude captures.
+  grepInvert: process.argv.includes('@screenshots') ? undefined : /@screenshots/,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   reporter: [['list'], ['html', { open: 'never' }]],
