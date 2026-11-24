@@ -4,6 +4,8 @@ import { buttonVariants } from './ui/button';
 import { ArrowRight } from 'lucide-react';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
 import { LoginLink, LogoutLink, RegisterLink } from '@kinde-oss/kinde-auth-nextjs/components';
+import Link from 'next/link';
+import { canViewDashboard, getAuthzEnv } from '@/lib/authz';
 
 
 const Navbar = async () => {
@@ -11,8 +13,6 @@ const Navbar = async () => {
     const {getUser} = getKindeServerSession();
     const user = await getUser();
   
-    const isAdmin = user?.email === process.env.ADMIN_EMAIL
-
   return (
     <div className='sticky z-[100] h-14 inset-x-0 top-0 w-full border-b
     border-gray-200 bg-white/75 backdrop-blur-lg transition-all'>
@@ -31,14 +31,13 @@ const Navbar = async () => {
                         })}>
                             Sign out
                         </LogoutLink>
-                        {isAdmin ? (<>
-                            {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- E3 replaces this link with /dashboard */}
-                            <a href='/api/auth/logout' className={buttonVariants({
+                        {canViewDashboard(user, getAuthzEnv()) ? (<>
+                            <Link href='/dashboard' className={buttonVariants({
                             size: "sm",
                             variant: "ghost",
                         })}>
                             Dashboard ✨
-                        </a></>): null}
+                        </Link></>): null}
                         <a 
                         href='/configure/upload/' 
                         className={buttonVariants({
