@@ -54,6 +54,11 @@ async function main() {
         },
       })
     }
+  }, {
+    // Remote databases (e.g. Neon from another region) need more than the 5 s default
+    // for these sequential writes.
+    maxWait: 10_000,
+    timeout: 30_000,
   })
   console.log('Seeded 8 paid sample orders for 3 example users.')
 }
