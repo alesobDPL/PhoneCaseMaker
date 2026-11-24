@@ -1,6 +1,6 @@
 "use server"
 
-import { BASE_PRICE, PRODUCT_PRICES } from "@/config/products"
+import { calculatePriceCents } from "@/lib/pricing"
 import { db } from "@/db"
 import { stripe } from "@/lib/stripe"
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server"
@@ -29,14 +29,7 @@ export const createCheckoutSession = async ({
         throw new Error("You need to be logged in")
     }
 
-    const { finish, material} = configuration
-
-    let price = BASE_PRICE
-    if(finish === "textured")
-        price+= PRODUCT_PRICES.finish.textured
-    
-    if(material==="polycarbonate")
-        price+= PRODUCT_PRICES.material.polycarbonate
+    const price = calculatePriceCents(configuration)
 
     let order: Order | undefined = undefined
 
@@ -53,7 +46,7 @@ export const createCheckoutSession = async ({
     } else{
         order = await db.order.create({
             data: {
-                amount: price / 100,
+                amountCents: price,
                 userId: user.id, 
                 configurationId: configuration.id
             }

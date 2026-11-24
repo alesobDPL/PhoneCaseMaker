@@ -75,8 +75,9 @@ model Order{
   configuration         Configuration @relation(fields:[configurationId], references: [id])
   user                  User          @relation(fields:[userId], references: [id])
   userId                String
-  amount                Float
+  amountCents           Int
   isPaid                Boolean       @default(false)
+  isSample              Boolean       @default(false)
   Status                OrderStatus   @default(awaiting_shipment)
 
   shippingAddress       ShippingAddress? @relation(fields: [shippingAddressId], references:[id])

@@ -3,6 +3,7 @@ import MaxWidthWrapper from './MaxWidthWrapper'
 import { buttonVariants } from './ui/button';
 import { ArrowRight } from 'lucide-react';
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
+import { LoginLink, LogoutLink, RegisterLink } from '@kinde-oss/kinde-auth-nextjs/components';
 
 
 const Navbar = async () => {
@@ -24,19 +25,20 @@ const Navbar = async () => {
             <div className='h-full flex items-center space-x-4'>
                 {user ? (
                     <>
-                        <a href='/api/auth/logout' className={buttonVariants({
+                        <LogoutLink className={buttonVariants({
                             size: "sm",
                             variant: "ghost",
                         })}>
                             Sign out
-                        </a>
-                        {isAdmin ? (
+                        </LogoutLink>
+                        {isAdmin ? (<>
+                            {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- E3 replaces this link with /dashboard */}
                             <a href='/api/auth/logout' className={buttonVariants({
                             size: "sm",
                             variant: "ghost",
                         })}>
                             Dashboard ✨
-                        </a>): null}
+                        </a></>): null}
                         <a 
                         href='/configure/upload/' 
                         className={buttonVariants({
@@ -48,21 +50,20 @@ const Navbar = async () => {
                         </a>
                     </>
                 ) : (<>
-                    <a href='/api/auth/register' className={buttonVariants({
+                    <RegisterLink className={buttonVariants({
                         size: "sm",
                         variant: "ghost",
                     })}>
                         Sign up
-                    </a>
+                    </RegisterLink>
                     
-                    <a 
-                    href='/api/auth/login/' 
+                    <LoginLink
                     className={buttonVariants({
                         size: "sm",
                         variant: "ghost",
                     })}>
                         Login
-                    </a>
+                    </LoginLink>
                     <div className='h-8 w-px bg-zinc-200 hidden sm:block'/>
                     <a 
                         href='/configure/upload/' 
