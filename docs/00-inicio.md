@@ -4,11 +4,11 @@ Configurador de fundas personalizadas: el usuario sube una imagen, la ajusta sob
 
 ## Estado actual · actualizado 2026-11-23
 
-- **Fase:** descubrimiento (mejora para portafolio).
-- **Último avance:** proyecto adoptado a la estructura `proyecto-ordenado`. El código no ha cambiado desde el 2024-12-26 (6 commits). Sin demo activa, según el propietario.
-- **Encargos abiertos:** ninguno.
-- **Bloqueos:** ninguno conocido. Las cuentas de los servicios externos están por revisar (ver la nota privada de servicios).
-- **Siguiente paso:** brainstorming de la mejora: público objetivo, qué lo distingue del tutorial de origen, demo con Stripe en modo prueba y dónde desplegar.
+- **Fase:** implementación.
+- **Último avance:** [diseño](superpowers/specs/2026-11-23-portafolio-design.md) y [plan](superpowers/plans/2026-11-23-portafolio.md) aprobados el 2026-11-23: pago correcto, panel con modo demo, pruebas y CI, y despliegue en Vercel + Neon.
+- **Encargos abiertos:** E1 (base), en preparación.
+- **Bloqueos:** ninguno. Las cuentas de los servicios externos se revisan en E5.
+- **Siguiente paso:** enviar E1 a Codex; después E2 y E3 en paralelo.
 - **Última bitácora:** `privado/bitacora/2026-11-23-2313-adopcion-proyecto-ordenado.md` (privada).
 
 <!-- Fases: descubrimiento | diseño | plan | implementación | revisión | despliegue | terminado.
