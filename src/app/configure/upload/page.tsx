@@ -2,12 +2,13 @@
 
 import { Progress } from '@/components/ui/progress'
 import { useToast } from '@/hooks/use-toast'
+import { getUploadErrorMessage, UPLOAD_ERROR_MESSAGES } from '@/lib/upload-errors'
 import { useUploadThing } from '@/lib/uploadthing'
 import { cn } from '@/lib/utils'
 import { Image, Loader2, MousePointerSquareDashed } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import React, { useState, useTransition } from 'react'
-import Dropzone, {FileRejection} from 'react-dropzone'
+import Dropzone from 'react-dropzone'
 
 const Page = () => {
 
@@ -24,26 +25,25 @@ const Page = () => {
             router.push(`/configure/design?id=${configId}`)
           })
         },
+        onUploadError: handleUploadError,
         onUploadProgress(p) {
           setUploadProgress(p)
         },
       })
 
-    const onDropRejected = (rejectedFiles:FileRejection[])  =>{
-        const [file] = rejectedFiles
-
+    function handleUploadError(error: unknown) {
         setIsDragOver(false)
-
-        toast({
-            title: `${file.file.type} type is supported.`,
-            description: "Please choose a PNG, JPG, JPEG image instead.",
-            variant: "destructive"
-
-        })
+        setUploadProgress(0)
+        toast({ ...getUploadErrorMessage(error), variant: 'destructive' })
     }
-    const onDropAccepted = (acceptedFiles: File[]) =>{
-        startUpload(acceptedFiles, {configId :undefined})
-    
+
+    const onDropRejected = () => {
+        setIsDragOver(false)
+        toast({ ...UPLOAD_ERROR_MESSAGES.unsupportedType, variant: 'destructive' })
+    }
+    const onDropAccepted = (acceptedFiles: File[]) => {
+        void startUpload(acceptedFiles, { configId: undefined }).catch(handleUploadError)
+
         setIsDragOver(false)
     }
 ;

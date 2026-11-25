@@ -1,3 +1,4 @@
+import { UPLOAD_ERROR_MESSAGES } from '../src/lib/upload-errors'
 import { expect, test } from './fixtures'
 
 test('home shows demo banner with test card when DEMO_MODE', async ({ page }) => {
@@ -18,6 +19,29 @@ test('upload page renders the dropzone', async ({ page }) => {
   await expect(page.getByText('Click to upload')).toBeVisible()
   await expect(page.getByText('or drag and drop')).toBeVisible()
   await expect(page.locator('input[type="file"]')).toHaveAttribute('accept', /image\/png/)
+})
+
+test('upload page shows an error and resets the dropzone after a failed upload', async ({ page }) => {
+  await page.route(/\/api\/uploadthing(?:\?|$)/, async (route) => {
+    if (route.request().method() === 'POST') {
+      await route.fulfill({ status: 500, json: { message: 'Internal upload error' } })
+    } else {
+      await route.fallback()
+    }
+  })
+
+  await page.goto('/configure/upload')
+  await page.locator('input[type="file"]').setInputFiles({
+    name: 'image.png',
+    mimeType: 'image/png',
+    buffer: Buffer.from(
+      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAAAAAA6fptVAAAACklEQVR4nGP4DwABAQEAsTj2FAAAAABJRU5ErkJggg==',
+      'base64',
+    ),
+  })
+
+  await expect(page.getByText(UPLOAD_ERROR_MESSAGES.generic.title, { exact: true })).toBeVisible()
+  await expect(page.getByText('Click to upload', { exact: true })).toBeVisible()
 })
 
 test('preview without session opens the login modal', async ({ page, configurationId }) => {

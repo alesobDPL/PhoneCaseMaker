@@ -14,6 +14,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Check, ChevronsUpDown } from "lucide-react"
 import { BASE_PRICE } from "@/config/products"
+import { getUploadErrorMessage } from "@/lib/upload-errors"
 import { useUploadThing } from "@/lib/uploadthing"
 import { useToast } from "@/hooks/use-toast"
 import { useMutation } from "@tanstack/react-query"
@@ -27,6 +28,8 @@ interface DesignConfiguratorProps {
   imageDimensions: { width: number; height: number }
 }
 
+class CropUploadError extends Error {}
+
 const DesignConfigurator = ({
   configId,
   imageUrl,
@@ -38,14 +41,21 @@ const DesignConfigurator = ({
   const { mutate: saveConfig, isPending } = useMutation({
     mutationKey: ['save-config'],
     mutationFn: async (args: SaveConfigArgs) => {
-      await Promise.all([saveConfiguration(), _saveConfig(args)])
+      await Promise.all([
+        saveConfiguration().catch((cause: unknown) => {
+          throw new CropUploadError(undefined, { cause })
+        }),
+        _saveConfig(args),
+      ])
     },
-    onError: () => {
-      toast({
-        title: 'Something went wrong',
-        description: 'There was an error on our end. Please try again.',
-        variant: 'destructive',
-      })
+    onError: (error) => {
+      const message = error instanceof CropUploadError
+        ? getUploadErrorMessage(error.cause)
+        : {
+            title: 'Something went wrong',
+            description: 'There was an error on our end. Please try again.',
+          }
+      toast({ ...message, variant: 'destructive' })
     },
     onSuccess: () => {
       router.push(`/configure/preview?id=${configId}`)
@@ -77,58 +87,56 @@ const DesignConfigurator = ({
   const phoneCaseRef = useRef<HTMLDivElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
-  const { startUpload } = useUploadThing('imageUploader')
+  const { startUpload } = useUploadThing('imageUploader', {
+    onUploadError(error) {
+      throw error
+    },
+  })
 
   async function saveConfiguration() {
-    try {
-      const {
-        left: caseLeft,
-        top: caseTop,
-        width,
-        height,
-      } = phoneCaseRef.current!.getBoundingClientRect()
+    const {
+      left: caseLeft,
+      top: caseTop,
+      width,
+      height,
+    } = phoneCaseRef.current!.getBoundingClientRect()
 
-      const { left: containerLeft, top: containerTop } =
-        containerRef.current!.getBoundingClientRect()
+    const { left: containerLeft, top: containerTop } =
+      containerRef.current!.getBoundingClientRect()
 
-      const leftOffset = caseLeft - containerLeft
-      const topOffset = caseTop - containerTop
+    const leftOffset = caseLeft - containerLeft
+    const topOffset = caseTop - containerTop
 
-      const actualX = renderedPosition.x - leftOffset
-      const actualY = renderedPosition.y - topOffset
+    const actualX = renderedPosition.x - leftOffset
+    const actualY = renderedPosition.y - topOffset
 
-      const canvas = document.createElement('canvas')
-      canvas.width = width
-      canvas.height = height
-      const ctx = canvas.getContext('2d')
+    const canvas = document.createElement('canvas')
+    canvas.width = width
+    canvas.height = height
+    const ctx = canvas.getContext('2d')
 
-      const userImage = new Image()
-      userImage.crossOrigin = 'anonymous'
-      userImage.src = imageUrl
-      await new Promise((resolve) => (userImage.onload = resolve))
+    const userImage = new Image()
+    userImage.crossOrigin = 'anonymous'
+    userImage.src = imageUrl
+    await new Promise((resolve) => (userImage.onload = resolve))
 
-      ctx?.drawImage(
-        userImage,
-        actualX,
-        actualY,
-        renderedDimension.width,
-        renderedDimension.height
-      )
+    ctx?.drawImage(
+      userImage,
+      actualX,
+      actualY,
+      renderedDimension.width,
+      renderedDimension.height
+    )
 
-      const base64 = canvas.toDataURL()
-      const base64Data = base64.split(',')[1]
+    const base64 = canvas.toDataURL()
+    const base64Data = base64.split(',')[1]
 
-      const blob = base64ToBlob(base64Data, 'image/png')
-      const file = new File([blob], 'filename.png', { type: 'image/png' })
+    const blob = base64ToBlob(base64Data, 'image/png')
+    const file = new File([blob], 'filename.png', { type: 'image/png' })
 
-      await startUpload([file], { configId })
-    } catch (err) {
-      toast({
-        title: 'Something went wrong',
-        description:
-          'There was a problem saving your config, please try again.',
-        variant: 'destructive',
-      })
+    const uploaded = await startUpload([file], { configId })
+    if (uploaded === undefined) {
+      throw new Error()
     }
   }
 
