@@ -8,18 +8,18 @@ Configurador de fundas personalizadas: el usuario sube una imagen, la ajusta sob
 - **Funcionalidad activa:** F5 Despliegue (spec: [portafolio](superpowers/specs/2026-11-23-portafolio-design.md) · plan: [portafolio](superpowers/plans/2026-11-23-portafolio.md) Tarea 8 · rama: `main`, sin encargo a Codex)
 - **Lote en curso:** —
 - **Último avance:** la demo en producción funciona de punta a punta: subida de imágenes (se corrigió una variable de entorno mal formada), login con Kinde (callbacks de producción agregados) y compra de prueba con Stripe. El webhook marca el pedido como pagado una sola vez.
-- **Bloqueos:** ninguno. Hallazgo: el webhook no guarda la dirección de envío, porque la versión de API del endpoint mueve `shipping_details` a `collected_information.shipping_details`. El cobro no se ve afectado.
+- **Bloqueos:** ninguno. E6 (el webhook guarda la dirección de envío de `collected_information.shipping_details`) está integrado en `main` local; falta publicarlo.
 - **Siguiente paso:**
-  1. E6 (dirección de envío en el webhook): lanzar, auditar, integrar en `main` con el sí del propietario, redesplegar y repetir la compra de prueba.
+  1. E6: push de `main` y redespliegue (cada uno con el sí del propietario), y repetir la compra de prueba para confirmar las direcciones.
   2. Encargo `onUploadError` para que un fallo de subida muestre un aviso.
   3. Tomar las capturas y cerrar los TODO del README.
 - **Última bitácora:** `privado/bitacora/2026-11-25-1606-webhook-subida-compra-prueba.md` (privada).
 
 | Encargo | Lote | Estado | Siguiente paso |
 | --- | --- | --- | --- |
-| E6 webhook-direccion | — | listo | Claude: lanzar con `enviar-encargo.ps1` |
+| E6 webhook-direccion | — | integrado | Propietario: autorizar push y redespliegue |
 
-E1 a E4 están integrados en `main`.
+E1 a E4 están integrados en `main`; E6 también (2026-11-25), sin publicar todavía.
 
 <!-- Fases: descubrimiento | diseño | plan | implementación | revisión | despliegue | terminado.
      Este bloque es el índice; el detalle de cada encargo vive en su Seguimiento (docs/privado/encargos/).
