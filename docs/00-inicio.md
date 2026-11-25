@@ -7,14 +7,13 @@ Configurador de fundas personalizadas: el usuario sube una imagen, la ajusta sob
 - **Fase:** despliegue
 - **Funcionalidad activa:** F5 Despliegue (spec: [portafolio](superpowers/specs/2026-11-23-portafolio-design.md) · plan: [portafolio](superpowers/plans/2026-11-23-portafolio.md) Tarea 8 · rama: `main`, sin encargo a Codex)
 - **Lote en curso:** —
-- **Último avance:** proyecto migrado al flujo de lotes. La demo está en producción en Vercel + Neon, con la base migrada y sembrada. Next.js subió a 15.5.29 por avisos de seguridad (`e63e9dd`) y el seed admite bases remotas (`7b41af0`). `main` ya está en el remoto.
-- **Bloqueos:** falta recargar una variable de entorno en Vercel y redesplegar. Hasta entonces no se ven el aviso de demo ni las páginas que leen la base. El webhook de Stripe (modo prueba) aún no está configurado.
+- **Último avance:** la demo en producción (Vercel + Neon) ya lee la base: se corrigió una variable de entorno mal formada y se redesplegó. La prueba de humo pasa, el aviso de demo aparece y las páginas de diseño y vista previa muestran los datos sembrados.
+- **Bloqueos:** el webhook de Stripe (modo prueba) aún no está configurado; lo crea el propietario.
 - **Siguiente paso:**
-  1. Recargar la variable y redesplegar.
-  2. Verificar el aviso de demo y las páginas con base de datos.
-  3. Configurar el webhook de Stripe y hacer una compra de prueba.
-  4. Tomar las capturas y cerrar los TODO del README.
-- **Última bitácora:** `privado/bitacora/2026-11-25-1231-migracion-flujo-lotes.md` (privada).
+  1. Configurar el webhook de Stripe y hacer una compra de prueba.
+  2. Revisar las URL de callback de Kinde.
+  3. Tomar las capturas y cerrar los TODO del README.
+- **Última bitácora:** `privado/bitacora/2026-11-25-1250-recarga-db-redespliegue.md` (privada).
 
 | Encargo | Lote | Estado | Siguiente paso |
 | --- | --- | --- | --- |
