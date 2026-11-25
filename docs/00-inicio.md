@@ -11,7 +11,7 @@ Configurador de fundas personalizadas: el usuario sube una imagen, la ajusta sob
 - **Bloqueos:** ninguno. E6 (el webhook guarda la dirección de envío de `collected_information.shipping_details`) está en `main`, desplegado y verificado en producción con una segunda compra de prueba (2026-11-25): el pedido quedó pagado con dirección de envío y de facturación.
 - **Siguiente paso:**
   1. Encargo `onUploadError` para que un fallo de subida muestre un aviso.
-  2. Cerrar los dos TODO del README (URL de la demo y enlace al tutorial; ambos los da el propietario). Las capturas ya existen en `docs/assets/`.
+  2. Cerrar el último TODO del README: el enlace al tutorial (lo da el propietario). La URL de la demo ya está; las capturas existen en `docs/assets/`.
 - **Última bitácora:** `privado/bitacora/2026-11-25-1606-webhook-subida-compra-prueba.md` (privada).
 
 | Encargo | Lote | Estado | Siguiente paso |

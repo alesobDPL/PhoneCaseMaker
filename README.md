@@ -6,9 +6,9 @@ A custom phone case storefront: upload an image, position it on a case, choose a
 
 ## Demo
 
-<!-- TODO(owner): URL de la demo -->
+Live demo: **[https://phonecase.alejandrosobarzo.cl](https://phonecase.alejandrosobarzo.cl)**
 
-The public demo link will be added once it is deployed. With `DEMO_MODE=true`, the home page displays the Stripe test card **4242 4242 4242 4242**. Use any future expiration date and any CVC in Stripe test mode.
+With `DEMO_MODE=true`, the home page displays the Stripe test card **4242 4242 4242 4242**. Use any future expiration date and any CVC in Stripe test mode.
 
 Sign in through Kinde to complete checkout or open `/dashboard`; there is no shared administrator account. A signed-in demo visitor sees sample orders and their own paid orders, and can update only their own orders. Sample orders are read-only for everyone, including the administrator. The seed creates eight paid sample orders for three fictional `@example.com` users; these are data fixtures, not login credentials.
 

@@ -6,9 +6,9 @@ Una tienda de fundas personalizadas: sube una imagen, ajústala sobre una funda,
 
 ## Demo
 
-<!-- TODO(owner): URL de la demo -->
+Demo en vivo: **[https://phonecase.alejandrosobarzo.cl](https://phonecase.alejandrosobarzo.cl)**
 
-El enlace a la demo pública se añadirá cuando esté desplegada. Con `DEMO_MODE=true`, la portada muestra la tarjeta de prueba de Stripe **4242 4242 4242 4242**. Usa cualquier fecha de vencimiento futura y cualquier CVC en el modo de prueba de Stripe.
+Con `DEMO_MODE=true`, la portada muestra la tarjeta de prueba de Stripe **4242 4242 4242 4242**. Usa cualquier fecha de vencimiento futura y cualquier CVC en el modo de prueba de Stripe.
 
 Inicia sesión con Kinde para completar el pago o entrar a `/dashboard`; no hay una cuenta pública de administrador. Un visitante con sesión ve los pedidos de ejemplo y sus propios pedidos pagados, y solo puede actualizar los suyos. Los pedidos de ejemplo son de solo lectura para todos, incluido el administrador. El seed crea ocho pedidos pagados para tres usuarios ficticios `@example.com`; son datos de ejemplo, no credenciales de acceso.
 
