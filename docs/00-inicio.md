@@ -8,16 +8,15 @@ Configurador de fundas personalizadas: el usuario sube una imagen, la ajusta sob
 - **Funcionalidad activa:** F5 Despliegue (spec: [portafolio](superpowers/specs/2026-11-23-portafolio-design.md) · plan: [portafolio](superpowers/plans/2026-11-23-portafolio.md) Tarea 8 · rama: `main`, sin encargo a Codex)
 - **Lote en curso:** —
 - **Último avance:** la demo en producción funciona de punta a punta: subida de imágenes (se corrigió una variable de entorno mal formada), login con Kinde (callbacks de producción agregados) y compra de prueba con Stripe. El webhook marca el pedido como pagado una sola vez.
-- **Bloqueos:** ninguno. E6 (el webhook guarda la dirección de envío de `collected_information.shipping_details`) está en `main` y desplegado en producción (2026-11-25); falta confirmarlo con una compra de prueba.
+- **Bloqueos:** ninguno. E6 (el webhook guarda la dirección de envío de `collected_information.shipping_details`) está en `main`, desplegado y verificado en producción con una segunda compra de prueba (2026-11-25): el pedido quedó pagado con dirección de envío y de facturación.
 - **Siguiente paso:**
-  1. E6: repetir la compra de prueba y confirmar que el pedido guarda las direcciones de envío y facturación.
-  2. Encargo `onUploadError` para que un fallo de subida muestre un aviso.
-  3. Tomar las capturas y cerrar los TODO del README.
+  1. Encargo `onUploadError` para que un fallo de subida muestre un aviso.
+  2. Tomar las capturas y cerrar los TODO del README.
 - **Última bitácora:** `privado/bitacora/2026-11-25-1606-webhook-subida-compra-prueba.md` (privada).
 
 | Encargo | Lote | Estado | Siguiente paso |
 | --- | --- | --- | --- |
-| E6 webhook-direccion | — | integrado y desplegado | Propietario: repetir la compra de prueba |
+| E6 webhook-direccion | — | integrado, desplegado y verificado | Claude: limpiar el worktree y la rama (con el sí del propietario) |
 
 E1 a E4 están integrados en `main`; E6 también (2026-11-25), ya publicado.
 
