@@ -10,14 +10,15 @@ Configurador de fundas personalizadas: el usuario sube una imagen, la ajusta sob
 - **Último avance:** la demo en producción funciona de punta a punta: subida de imágenes (se corrigió una variable de entorno mal formada), login con Kinde (callbacks de producción agregados) y compra de prueba con Stripe. El webhook marca el pedido como pagado una sola vez.
 - **Bloqueos:** ninguno. E6 (el webhook guarda la dirección de envío de `collected_information.shipping_details`) está en `main`, desplegado y verificado en producción con una segunda compra de prueba (2026-11-25): el pedido quedó pagado con dirección de envío y de facturación.
 - **Siguiente paso:**
-  1. Diseño de F6 (subagente Opus): preguntas bloqueantes al propietario, luego spec y hoja de ruta. El propietario pidió explotar hasta 3 encargos de Codex en paralelo.
-  2. Encargo E7 `onUploadError` (un fallo de subida muestra un aviso), redactado por el subagente Opus.
+  1. Spec de F6–F8 **Aprobado** (2026-11-25). Opus escribe el plan, los ADR y los encargos del lote 0 (e8 y e9); luego el propietario aprueba el plan y se crea la rama `feat/f6-f8-idiomas-pedidos-moneda`.
+  2. E7 `onUploadError` integrado en `main` (2026-11-25, sin push ni despliegue). Pendiente, con el sí del propietario: limpiar su worktree y rama, y publicarlo.
   3. El enlace al tutorial del README **no se pondrá** (decisión del propietario, 2026-11-25): queda el comentario TODO.
 - **Última bitácora:** `privado/bitacora/2026-11-25-1606-webhook-subida-compra-prueba.md` (privada).
 
 | Encargo | Lote | Estado | Siguiente paso |
 | --- | --- | --- | --- |
 | E6 webhook-direccion | — | integrado, desplegado y verificado | — (worktree y rama ya eliminados) |
+| E7 onuploaderror | — | integrado en main (48e5369), sin publicar | Limpiar worktree y rama; push y despliegue con el sí del propietario |
 
 E1 a E4 están integrados en `main`; E6 también (2026-11-25), ya publicado.
 
