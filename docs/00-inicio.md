@@ -4,8 +4,8 @@ Configurador de fundas personalizadas: el usuario sube una imagen, la ajusta sob
 
 ## Estado actual · actualizado 2026-11-25
 
-- **Fase:** diseño (F6, tras terminar el MVP)
-- **Funcionalidad activa:** F6 Interfaz en español con selector ES/EN, "Mis pedidos" y multimoneda — **Propuesto**, aún sin spec. F5 Despliegue quedó terminada (en `main`, verificada en producción el 2026-11-25).
+- **Fase:** plan (F6–F8, tras terminar el MVP)
+- **Funcionalidad activa:** F6 Idiomas ES/EN, F7 "Mis pedidos" y F8 Multimoneda, juntas: [spec](superpowers/specs/2026-11-25-idiomas-pedidos-multimoneda-design.md) **Aprobado** el 2026-11-25; [plan](superpowers/plans/2026-11-25-idiomas-pedidos-multimoneda.md) **Propuesto**. F5 Despliegue quedó terminada (en `main`, verificada en producción el 2026-11-25).
 - **Lote en curso:** —
 - **Último avance:** la demo en producción funciona de punta a punta: subida de imágenes (se corrigió una variable de entorno mal formada), login con Kinde (callbacks de producción agregados) y compra de prueba con Stripe. El webhook marca el pedido como pagado una sola vez.
 - **Bloqueos:** ninguno. E6 (el webhook guarda la dirección de envío de `collected_information.shipping_details`) está en `main`, desplegado y verificado en producción con una segunda compra de prueba (2026-11-25): el pedido quedó pagado con dirección de envío y de facturación.

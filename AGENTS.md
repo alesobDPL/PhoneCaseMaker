@@ -28,7 +28,7 @@ El encargo es la fuente de verdad: no añadir nada que no esté en él.
 8. **No edites `docs/`.** Si algo de la documentación parece incorrecto, indícalo en `dudas`.
 9. Ante una ambigüedad que obligue a cambiar la arquitectura, una interfaz o el alcance: pregunta en `dudas`, no decidas.
 10. **Interfaz:** usa solo los tokens y componentes definidos en el spec, y cubre con pruebas de capturas las pantallas y estados que pida el encargo. No decidas el diseño.
-11. Identificadores de código y textos de interfaz en inglés; mensajes y entrega en español. `.env.example` lleva solo valores ficticios; nunca versiones secretos.
+11. Identificadores de código en inglés; los textos visibles al usuario solo en los archivos de mensajes (`es` y `en`), nunca escritos en los componentes; mensajes y entrega en español. `.env.example` lleva solo valores ficticios; nunca versiones secretos.
 12. Dinero siempre en centavos enteros y autorización siempre en el servidor (ver *Global Constraints* del plan vigente).
 
 ## Entrega

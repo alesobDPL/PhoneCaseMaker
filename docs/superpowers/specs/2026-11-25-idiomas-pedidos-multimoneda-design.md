@@ -2,9 +2,9 @@
 
 [Volver al inicio](../../00-inicio.md) · [Hoja de ruta](../../hoja-de-ruta.md)
 
-Estado del spec: **Propuesto** el 2026-11-25 (las respuestas de la tabla siguiente son del propietario; el resto del spec espera su aprobación). No autoriza escribir el plan ni implementar hasta que el propietario lo apruebe.
+Estado del spec: **Aprobado** el 2026-11-25 por el propietario ("Aprobar todo"), incluidas D9 (precios base), D10 (regla 11 de `AGENTS.md`), D4 (se mantiene `amountCents`) y D2 (formato `es-CL` y `en-US`). Autoriza escribir el plan y los ADR. No autoriza implementar hasta que el propietario apruebe el plan.
 
-Respuestas del propietario del 2026-11-25 que este spec ya incorpora (el spec en conjunto sigue **Propuesto**):
+Respuestas del propietario del 2026-11-25 que este spec ya incorpora (el spec en conjunto quedó **Aprobado** el 2026-11-25):
 
 | # | Pregunta | Respuesta |
 |---|---|---|
@@ -56,7 +56,7 @@ Que el proyecto destaque como portafolio con tres mejoras:
 - El encargo de la base crea **todos** los archivos (los que no son suyos como `{}`); cada encargo posterior es dueño de su espacio de nombres. Así nunca dos encargos editan el mismo JSON.
 - Prueba unitaria de paridad: mismas claves en `es` y `en`, ningún valor vacío en archivos ya poblados.
 - Los mensajes se cargan en el servidor; al cliente solo pasan los espacios de nombres que usan sus componentes cliente.
-- Región de formato: `es` → `es-CL` (miles con punto, coma decimal), `en` → `en-US`. **Propuesto**.
+- Región de formato: `es` → `es-CL` (miles con punto, coma decimal), `en` → `en-US`. **Aprobado** 2026-11-25.
 
 ### D3 · Monedas y lista de precios (F8)
 
@@ -69,7 +69,7 @@ Que el proyecto destaque como portafolio con tres mejoras:
 ### D4 · Pedido, cobro y verificación (F8)
 
 - Migración aditiva: `Order.currency` (`String`, por defecto `'usd'`, restringido a la lista en el servidor). Los pedidos existentes quedan en USD, que es lo que se cobró.
-- `amountCents` **conserva su nombre** y se documenta como "monto en unidad menor de `currency`" (renombrar obligaría a una migración destructiva). **Propuesto**.
+- `amountCents` **conserva su nombre** y se documenta como "monto en unidad menor de `currency`" (renombrar obligaría a una migración destructiva). **Aprobado** 2026-11-25.
 - `createCheckoutSession` lee la moneda de la cookie `CURRENCY`, la valida contra la lista (si no es válida usa USD), calcula el precio en el servidor y, si reutiliza un pedido sin pagar, **actualiza `amountCents` y `currency`** antes de crear la sesión. `currency` y `unit_amount` de Stripe salen de ese cálculo.
 - `handleCheckoutCompleted` solo marca pagado si `amount_total` y `currency` de la sesión coinciden con el pedido; si no, no lo marca, registra el desajuste y responde 200 para que Stripe no reintente en bucle.
 - Mínimos de Stripe: el precio más bajo de cada moneda queda muy por encima del mínimo (0,50 USD/EUR; CLP equivalente). Se verifica en una prueba unitaria contra una constante documentada.
@@ -95,7 +95,7 @@ Las tarjetas de 7 y 30 días muestran una línea por moneda con ventas (`USD 1.2
 - `prisma/seed.ts` añade pedidos de ejemplo pagados en EUR y CLP (montos calculados con `calculatePrice`), para que el panel y "Mis pedidos" de los usuarios de ejemplo muestren varias monedas.
 - `DEMO_MODE` y el aviso de demostración no cambian de comportamiento; solo se traducen.
 
-### D9 · Precios concretos · **Propuesto, pendiente de aprobación**
+### D9 · Precios concretos · **Aprobado** 2026-11-25
 
 | Concepto | USD | EUR | CLP |
 |---|---|---|---|
@@ -106,7 +106,7 @@ Las tarjetas de 7 y 30 días muestran una línea por moneda con ventas (`USD 1.2
 
 Precios redondos por mercado, no conversiones exactas.
 
-### D10 · Regla 11 de AGENTS.md (textos de interfaz en inglés) · **Propuesto, pendiente de aprobación**
+### D10 · Regla 11 de AGENTS.md (textos de interfaz en inglés) · **Aprobado** 2026-11-25
 
 Hoy dice que los textos de interfaz van en inglés. Con F6 pasa a: "identificadores y código en inglés; los textos visibles van **solo** en `messages/{es,en}/*.json`, nunca escritos en componentes". El cambio en `AGENTS.md` lo hace Claude tras la aprobación (no es parte de ningún encargo).
 
