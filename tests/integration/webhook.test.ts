@@ -34,6 +34,26 @@ function completedEvent(orderId?: string, userId?: string) {
   }
 }
 
+function collectedCompletedEvent(orderId?: string, userId?: string) {
+  const event = completedEvent(orderId, userId)
+  const { shipping_details, ...session } = event.data.object
+  return {
+    ...event,
+    data: {
+      object: {
+        ...session,
+        collected_information: {
+          shipping_details: {
+            ...shipping_details,
+            name: 'Collected Shipping Customer',
+            address: { ...shipping_details.address, line1: '300 Collected Shipping Street' },
+          },
+        },
+      },
+    },
+  }
+}
+
 async function expectNoPaymentWrites(orderId: string) {
   expect(await db.order.findUniqueOrThrow({ where: { id: orderId } }))
     .toMatchObject({ isPaid: false, shippingAddressId: null, billingAddressId: null })
@@ -60,6 +80,47 @@ describe('checkout webhook', () => {
     expect(await db.billingAddress.count()).toBe(1)
   })
 
+  it('stores collected shipping and customer billing addresses without root shipping_details', async () => {
+    const order = await createOrder()
+    const event = collectedCompletedEvent(order.id, order.userId)
+    expect(event.data.object).not.toHaveProperty('shipping_details')
+    const response = await POST(signedStripeRequest(event))
+
+    expect(response.status).toBe(200)
+    const paid = await db.order.findUniqueOrThrow({
+      where: { id: order.id }, include: { shippingAddress: true, billingAddress: true },
+    })
+    expect(paid.isPaid).toBe(true)
+    expect(paid.shippingAddress).toMatchObject({
+      name: 'Collected Shipping Customer', street: '300 Collected Shipping Street',
+    })
+    expect(paid.billingAddress).toMatchObject({ name: 'Billing Customer', street: '100 Billing Street' })
+    expect(await db.shippingAddress.count()).toBe(1)
+    expect(await db.billingAddress.count()).toBe(1)
+  })
+
+  it('prefers collected shipping details when both formats are present', async () => {
+    const order = await createOrder()
+    const event = collectedCompletedEvent(order.id, order.userId)
+    const session = {
+      ...event.data.object,
+      shipping_details: completedEvent(order.id, order.userId).data.object.shipping_details,
+    }
+    const response = await POST(signedStripeRequest({ ...event, data: { object: session } }))
+
+    expect(response.status).toBe(200)
+    const paid = await db.order.findUniqueOrThrow({
+      where: { id: order.id }, include: { shippingAddress: true, billingAddress: true },
+    })
+    expect(paid.isPaid).toBe(true)
+    expect(paid.shippingAddress).toMatchObject({
+      name: 'Collected Shipping Customer', street: '300 Collected Shipping Street',
+    })
+    expect(paid.billingAddress).toMatchObject({ name: 'Billing Customer', street: '100 Billing Street' })
+    expect(await db.shippingAddress.count()).toBe(1)
+    expect(await db.billingAddress.count()).toBe(1)
+  })
+
   it.each(['sequential', 'simultaneous'] as const)(
     'same event twice keeps one set of addresses (%s)', async (delivery) => {
       const order = await createOrder()
@@ -71,6 +132,29 @@ describe('checkout webhook', () => {
 
       expect(responses.map(({ status }) => status)).toEqual([200, 200])
       expect((await db.order.findUniqueOrThrow({ where: { id: order.id } })).isPaid).toBe(true)
+      expect(await db.shippingAddress.count()).toBe(1)
+      expect(await db.billingAddress.count()).toBe(1)
+    },
+  )
+
+  it.each(['sequential', 'simultaneous'] as const)(
+    'same collected event twice keeps one set of addresses (%s)', async (delivery) => {
+      const order = await createOrder()
+      const event = collectedCompletedEvent(order.id, order.userId)
+      const deliver = () => POST(signedStripeRequest(event))
+      const responses = delivery === 'simultaneous'
+        ? await Promise.all([deliver(), deliver()])
+        : [await deliver(), await deliver()]
+
+      expect(responses.map(({ status }) => status)).toEqual([200, 200])
+      const paid = await db.order.findUniqueOrThrow({
+        where: { id: order.id }, include: { shippingAddress: true, billingAddress: true },
+      })
+      expect(paid.isPaid).toBe(true)
+      expect(paid.shippingAddress).toMatchObject({
+        name: 'Collected Shipping Customer', street: '300 Collected Shipping Street',
+      })
+      expect(paid.billingAddress).toMatchObject({ name: 'Billing Customer', street: '100 Billing Street' })
       expect(await db.shippingAddress.count()).toBe(1)
       expect(await db.billingAddress.count()).toBe(1)
     },
@@ -109,7 +193,7 @@ describe('checkout webhook', () => {
   it('session without shipping_details marks paid without addresses', async () => {
     const order = await createOrder()
     const event = completedEvent(order.id, order.userId)
-    const session = { ...event.data.object, shipping_details: null }
+    const session = { ...event.data.object, shipping_details: null, collected_information: null }
     const response = await POST(signedStripeRequest({ ...event, data: { object: session } }))
     expect(response.status).toBe(200)
     expect(await db.order.findUniqueOrThrow({ where: { id: order.id } }))
