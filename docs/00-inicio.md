@@ -4,14 +4,15 @@ Configurador de fundas personalizadas: el usuario sube una imagen, la ajusta sob
 
 ## Estado actual · actualizado 2026-11-25
 
-- **Fase:** despliegue
-- **Funcionalidad activa:** F5 Despliegue (spec: [portafolio](superpowers/specs/2026-11-23-portafolio-design.md) · plan: [portafolio](superpowers/plans/2026-11-23-portafolio.md) Tarea 8 · rama: `main`, sin encargo a Codex)
+- **Fase:** diseño (F6, tras terminar el MVP)
+- **Funcionalidad activa:** F6 Interfaz en español con selector ES/EN, "Mis pedidos" y multimoneda — **Propuesto**, aún sin spec. F5 Despliegue quedó terminada (en `main`, verificada en producción el 2026-11-25).
 - **Lote en curso:** —
 - **Último avance:** la demo en producción funciona de punta a punta: subida de imágenes (se corrigió una variable de entorno mal formada), login con Kinde (callbacks de producción agregados) y compra de prueba con Stripe. El webhook marca el pedido como pagado una sola vez.
 - **Bloqueos:** ninguno. E6 (el webhook guarda la dirección de envío de `collected_information.shipping_details`) está en `main`, desplegado y verificado en producción con una segunda compra de prueba (2026-11-25): el pedido quedó pagado con dirección de envío y de facturación.
 - **Siguiente paso:**
-  1. Encargo `onUploadError` para que un fallo de subida muestre un aviso.
-  2. Cerrar el último TODO del README: el enlace al tutorial (lo da el propietario). La URL de la demo ya está; las capturas existen en `docs/assets/`.
+  1. Diseño de F6 (subagente Opus): preguntas bloqueantes al propietario, luego spec y hoja de ruta. El propietario pidió explotar hasta 3 encargos de Codex en paralelo.
+  2. Encargo E7 `onUploadError` (un fallo de subida muestra un aviso), redactado por el subagente Opus.
+  3. El enlace al tutorial del README **no se pondrá** (decisión del propietario, 2026-11-25): queda el comentario TODO.
 - **Última bitácora:** `privado/bitacora/2026-11-25-1606-webhook-subida-compra-prueba.md` (privada).
 
 | Encargo | Lote | Estado | Siguiente paso |
