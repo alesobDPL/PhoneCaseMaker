@@ -2,14 +2,18 @@
 
 Configurador de fundas personalizadas: el usuario sube una imagen, la ajusta sobre la funda, elige modelo, material y acabado, y paga con Stripe. Proyecto de portafolio.
 
-## Estado actual · actualizado 2026-11-24
+## Estado actual · actualizado 2026-11-25
 
-- **Fase:** despliegue.
-- **Último avance:** [diseño](superpowers/specs/2026-11-23-portafolio-design.md) y [plan](superpowers/plans/2026-11-23-portafolio.md) aprobados el 2026-11-23: pago correcto, panel con modo demo, pruebas y CI, y despliegue en Vercel + Neon.
-- **Encargos:** E1 a E4 aceptados e integrados en `main` local (`911efe6`, sin push): pago idempotente, página de gracias, panel con modo demo, aviso de demo, README bilingüe y CI. Pruebas: 12 unitarias, 28 de integración y 4 end-to-end.
-- **Bloqueos:** ninguno.
-- **Siguiente paso:** E5, el despliegue en Vercel + Neon con el propietario (cuentas, Stripe en modo prueba y subdominio), y después las capturas del panel y los TODO del README.
-- **Última bitácora:** `privado/bitacora/2026-11-24-1118-implementacion-e1-e4.md` (privada).
+- **Fase:** despliegue (E5, en curso).
+- **Último avance:** la demo está en producción en Vercel + Neon, en el subdominio del propietario. La base está migrada y sembrada. Next.js subió a 15.5.29 para corregir avisos de seguridad (`e63e9dd`) y el seed admite bases remotas (`7b41af0`). `main` ya está en el remoto.
+- **Encargos:** E1 a E4 aceptados y en `main`. E5 lo ejecuta Claude Code con el propietario, sin encargo a Codex.
+- **Bloqueos:** falta recargar una variable de entorno en Vercel y redesplegar. Hasta entonces no se ven el aviso de demo ni las páginas que leen la base. El webhook de Stripe (modo prueba) aún no está configurado.
+- **Siguiente paso:**
+  1. Recargar la variable y redesplegar.
+  2. Verificar el aviso de demo y las páginas con base de datos.
+  3. Configurar el webhook de Stripe y hacer una compra de prueba.
+  4. Tomar las capturas y cerrar los TODO del README.
+- **Última bitácora:** `privado/bitacora/2026-11-25-1226-despliegue-vercel.md` (privada).
 
 <!-- Fases: descubrimiento | diseño | plan | implementación | revisión | despliegue | terminado.
      Mantener este bloque en unas 15 líneas. Repo público: sin datos sensibles aquí. -->
