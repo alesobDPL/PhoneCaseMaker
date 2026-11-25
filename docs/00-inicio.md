@@ -7,13 +7,13 @@ Configurador de fundas personalizadas: el usuario sube una imagen, la ajusta sob
 - **Fase:** despliegue
 - **Funcionalidad activa:** F5 Despliegue (spec: [portafolio](superpowers/specs/2026-11-23-portafolio-design.md) · plan: [portafolio](superpowers/plans/2026-11-23-portafolio.md) Tarea 8 · rama: `main`, sin encargo a Codex)
 - **Lote en curso:** —
-- **Último avance:** la demo en producción (Vercel + Neon) ya lee la base: se corrigió una variable de entorno mal formada y se redesplegó. La prueba de humo pasa, el aviso de demo aparece y las páginas de diseño y vista previa muestran los datos sembrados.
-- **Bloqueos:** el webhook de Stripe (modo prueba) aún no está configurado; lo crea el propietario.
+- **Último avance:** la demo en producción funciona de punta a punta: subida de imágenes (se corrigió una variable de entorno mal formada), login con Kinde (callbacks de producción agregados) y compra de prueba con Stripe. El webhook marca el pedido como pagado una sola vez.
+- **Bloqueos:** ninguno. Hallazgo: el webhook no guarda la dirección de envío, porque la versión de API del endpoint mueve `shipping_details` a `collected_information.shipping_details`. El cobro no se ve afectado.
 - **Siguiente paso:**
-  1. Configurar el webhook de Stripe y hacer una compra de prueba.
-  2. Revisar las URL de callback de Kinde.
+  1. Decidir el arreglo de la dirección de envío (Propuesto: encargo a Codex en el handler) y repetir la compra de prueba.
+  2. Encargo `onUploadError` para que un fallo de subida muestre un aviso.
   3. Tomar las capturas y cerrar los TODO del README.
-- **Última bitácora:** `privado/bitacora/2026-11-25-1250-recarga-db-redespliegue.md` (privada).
+- **Última bitácora:** `privado/bitacora/2026-11-25-1606-webhook-subida-compra-prueba.md` (privada).
 
 | Encargo | Lote | Estado | Siguiente paso |
 | --- | --- | --- | --- |
