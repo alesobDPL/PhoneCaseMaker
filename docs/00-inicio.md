@@ -10,15 +10,16 @@ Configurador de fundas personalizadas: el usuario sube una imagen, la ajusta sob
 - **Último avance:** la demo en producción funciona de punta a punta: subida de imágenes (se corrigió una variable de entorno mal formada), login con Kinde (callbacks de producción agregados) y compra de prueba con Stripe. El webhook marca el pedido como pagado una sola vez.
 - **Bloqueos:** ninguno. Hallazgo: el webhook no guarda la dirección de envío, porque la versión de API del endpoint mueve `shipping_details` a `collected_information.shipping_details`. El cobro no se ve afectado.
 - **Siguiente paso:**
-  1. Decidir el arreglo de la dirección de envío (Propuesto: encargo a Codex en el handler) y repetir la compra de prueba.
+  1. E6 (dirección de envío en el webhook): lanzar, auditar, integrar en `main` con el sí del propietario, redesplegar y repetir la compra de prueba.
   2. Encargo `onUploadError` para que un fallo de subida muestre un aviso.
   3. Tomar las capturas y cerrar los TODO del README.
 - **Última bitácora:** `privado/bitacora/2026-11-25-1606-webhook-subida-compra-prueba.md` (privada).
 
 | Encargo | Lote | Estado | Siguiente paso |
 | --- | --- | --- | --- |
+| E6 webhook-direccion | — | listo | Claude: lanzar con `enviar-encargo.ps1` |
 
-Ningún encargo abierto: E1 a E4 están integrados en `main`.
+E1 a E4 están integrados en `main`.
 
 <!-- Fases: descubrimiento | diseño | plan | implementación | revisión | despliegue | terminado.
      Este bloque es el índice; el detalle de cada encargo vive en su Seguimiento (docs/privado/encargos/).
