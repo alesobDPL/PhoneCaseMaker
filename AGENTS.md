@@ -1,53 +1,53 @@
 # Instrucciones para agentes de IA
 
-PhoneCaseMaker se desarrolla con agentes de IA bajo dirección y aprobación humana. Las instrucciones específicas de Claude Code están en [CLAUDE.md](CLAUDE.md); ambos archivos deben mantenerse coherentes.
+PhoneCaseMaker se desarrolla con agentes de IA bajo dirección y aprobación humana. Las instrucciones de Claude Code están en [CLAUDE.md](CLAUDE.md); ambos archivos deben mantenerse coherentes.
 
 ## Roles
 
-- **Propietario:** elige entre alternativas importantes, aprueba el diseño y después el plan, acepta cada entrega y autoriza fusiones, despliegues y cambios de infraestructura. La revisión de un agente no sustituye su aprobación.
-- **Claude Code:** arquitecto. Propone y documenta el diseño, elabora el plan, prepara los encargos y revisa la implementación. No escribe código de aplicación.
-- **Codex:** implementa las tareas del encargo recibido, escribe código y pruebas, depura y corrige los hallazgos de la revisión. Puede decidir detalles de implementación dentro de lo aprobado. Le entrega cuentas a Claude Code, que revisa y le informa al propietario.
+- **Propietario:** elige entre alternativas importantes, aprueba el diseño y el plan, acepta o devuelve cada entrega y autoriza merges a `main`, despliegues y cambios de infraestructura. La revisión de un agente no sustituye su aprobación.
+- **Claude Code:** arquitecto. Diseña, planifica, prepara los encargos, lanza a Codex, audita las entregas e integra los lotes aceptados en la rama de la funcionalidad. No escribe código de aplicación.
+- **Codex:** implementa el encargo recibido con código y pruebas, depura y corrige los hallazgos. Decide detalles de implementación dentro de lo aprobado. Rinde cuentas a Claude Code.
 
 ## Dónde está la información
 
-- Estado actual y mapa: [docs/00-inicio.md](docs/00-inicio.md).
-- Diseños aprobados: [docs/superpowers/specs/](docs/superpowers/specs/README.md).
-- Planes aprobados: [docs/superpowers/plans/](docs/superpowers/plans/README.md).
-- Decisiones de arquitectura: [docs/decisiones/](docs/decisiones/README.md).
-- Criterios de desarrollo: [docs/arquitectura/criterios-desarrollo.md](docs/arquitectura/criterios-desarrollo.md).
+- Estado y mapa: [docs/00-inicio.md](docs/00-inicio.md). Hoja de ruta: [docs/hoja-de-ruta.md](docs/hoja-de-ruta.md).
+- Diseños: [docs/superpowers/specs/](docs/superpowers/specs/README.md). Planes: [docs/superpowers/plans/](docs/superpowers/plans/README.md).
+- Decisiones: [docs/decisiones/](docs/decisiones/README.md). Arquitectura: [docs/arquitectura/](docs/arquitectura/README.md). Criterios: [docs/arquitectura/criterios-desarrollo.md](docs/arquitectura/criterios-desarrollo.md).
 
 ## Reglas para Codex
 
-Codex le rinde cuentas a Claude Code. El encargo es la fuente de verdad: no añadir nada que no esté en él.
+El encargo es la fuente de verdad: no añadir nada que no esté en él.
 
-1. **Antes de empezar:** ejecutar la sección *Antes de empezar* del encargo (rama y SHA base). Si algo no coincide, detenerse y reportar.
-2. **Solo los archivos permitidos** por el encargo: otros trabajadores pueden estar en paralelo. Trabajar solo en el worktree y la rama del encargo, nunca en `main`. No fusionar, no hacer push y no desplegar.
-3. **Test primero:** seguir los pasos en orden. Cada test se escribe y se ejecuta, y se ve fallar antes de implementar; después se ejecuta y se ve pasar.
-4. **Ante un fallo, buscar la causa antes de cambiar código.** Si al segundo intento no se resuelve, detenerse y reportar lo observado.
-5. **Nada está terminado sin evidencia:** ejecutar todas las verificaciones del encargo y copiar su resultado en la entrega.
-6. **No editar la documentación de Claude Code:** `docs/00-inicio.md`, `docs/decisiones/`, `docs/arquitectura/` ni `docs/superpowers/`. Si algo de ella parece incorrecto, indicarlo en la entrega.
-7. Ante una ambigüedad que exija cambiar la arquitectura, una interfaz o el alcance: preguntar, no decidir.
-8. Identificadores de código en inglés; mensajes y entrega en español. No versionar secretos: `.env.example` lleva solo valores ficticios.
+1. **Ya estás en tu worktree y tu rama.** No crees ramas ni worktrees, no hagas merge, rebase, push ni despliegues. Pueden estar trabajando otros Codex en paralelo en otras ramas.
+2. **Solo los archivos permitidos.** Si necesitas tocar otro, detente y explícalo en `dudas`.
+3. **Lee solo las lecturas del encargo** y el código que necesites para el paso en curso.
+4. **Test primero:** escribe el test, míralo fallar, implementa, míralo pasar.
+5. **No hagas commit ni cambies el estado de git** (tu sandbox no puede escribir en `.git`): deja tus cambios en la carpeta. El script de Claude los registra en un commit de tu rama al terminar cada ejecución, también si se corta, así que nada se pierde.
+6. **Ante un fallo, busca la causa antes de cambiar código.** Si al segundo intento no se resuelve, detente y repórtalo.
+7. **Nada está terminado sin evidencia:** ejecuta todas las verificaciones exigidas antes de entregar.
+8. **No edites `docs/`.** Si algo de la documentación parece incorrecto, indícalo en `dudas`.
+9. Ante una ambigüedad que obligue a cambiar la arquitectura, una interfaz o el alcance: pregunta en `dudas`, no decidas.
+10. **Interfaz:** usa solo los tokens y componentes definidos en el spec, y cubre con pruebas de capturas las pantallas y estados que pida el encargo. No decidas el diseño.
+11. Identificadores de código y textos de interfaz en inglés; mensajes y entrega en español. `.env.example` lleva solo valores ficticios; nunca versiones secretos.
+12. Dinero siempre en centavos enteros y autorización siempre en el servidor (ver *Global Constraints* del plan vigente).
 
-## Entrega a Claude Code
+## Entrega
 
-Hacer commit en la rama del encargo y responder con:
-
-- Commit (SHA) y rama.
-- Archivos cambiados.
-- Verificaciones ejecutadas, con su resultado.
-- Lo que no se pudo verificar y por qué.
-- Dudas, riesgos o desviaciones del encargo.
+Tu último mensaje es solo el JSON de entrega (el esquema lo envía Claude): commit (vacío), rama, estado (`completo`, `parcial` o `bloqueado`), archivos cambiados, pasos completados, verificaciones (comando, `ok`/`fallo`/`no_ejecutado` y una línea de detalle), lo no verificado, las desviaciones y las dudas. **Sin logs ni salidas completas**: una línea por verificación.
 
 ## Comandos
 
-Desde la raíz, con npm. Las variables necesarias están en `docs/arquitectura/README.md` (stack) y se documentarán en `.env.example` cuando el plan lo cree.
+Desde la raíz, con npm. Las variables necesarias están en `.env.example`.
 
 | Acción | Comando |
 | --- | --- |
 | Instalar | `npm install` (ejecuta `prisma generate`) |
 | Desarrollo | `npm run dev` |
 | Compilar | `npm run build` |
+| Pruebas unitarias | `npm run test:unit` |
+| Pruebas de integración | `npm run test:integration` (requiere Docker: Testcontainers) |
+| Pruebas end-to-end | `npm run test:e2e` |
+| Pruebas (un archivo) | `npx vitest run <ruta>` · `npx playwright test <ruta>` |
+| Pruebas visuales (capturas) | `npm run screenshots` |
 | Lint | `npm run lint` |
-| Tipos | `npx tsc --noEmit` |
-| Pruebas | Pendiente: no hay pruebas todavía; las define el plan |
+| Tipos | `npm run typecheck` |
