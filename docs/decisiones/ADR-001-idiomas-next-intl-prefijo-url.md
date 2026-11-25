@@ -2,7 +2,7 @@
 
 [Decisiones](README.md) · [Inicio](../00-inicio.md)
 
-**Estado:** Propuesto (diseño aprobado el 2026-11-25; este ADR está pendiente de aprobación)
+**Estado:** Aprobado el 2026-11-25 por el propietario
 
 ## Contexto
 

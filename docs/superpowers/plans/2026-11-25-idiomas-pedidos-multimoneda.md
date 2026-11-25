@@ -2,7 +2,7 @@
 
 [Planes](README.md) · [Diseño aprobado](../specs/2026-11-25-idiomas-pedidos-multimoneda-design.md) · [Inicio](../../00-inicio.md)
 
-Fecha: 2026-11-25 · Estado: **Propuesto** (pendiente de aprobación del propietario)
+Fecha: 2026-11-25 · Estado: **Aprobado** el 2026-11-25 por el propietario ("Aprobar todo"), con la instalación de `next-intl@4` (A0), la zona horaria `America/Santiago` y la numeración E8 dinero · E9 idiomas
 
 Ejecución: encargos a Codex por lotes (ver la tabla final), cada uno en su worktree y rama, sobre la rama de la funcionalidad `feat/f6-f8-idiomas-pedidos-moneda`. Claude integra cada lote completo antes de lanzar el siguiente.
 
@@ -14,7 +14,7 @@ Ejecución: encargos a Codex por lotes (ver la tabla final), cada uno en su work
 
 **Tech Stack:** Next.js 15 (App Router), TypeScript, next-intl 4, Prisma 5 + PostgreSQL, Stripe 17, Tailwind + Radix (shadcn), Vitest (unitarias e integración con Testcontainers), Playwright.
 
-**Spec:** [`docs/superpowers/specs/2026-11-25-idiomas-pedidos-multimoneda-design.md`](../specs/2026-11-25-idiomas-pedidos-multimoneda-design.md) (Aprobado 2026-11-25). Decisiones: [ADR-001](../../decisiones/ADR-001-idiomas-next-intl-prefijo-url.md) y [ADR-002](../../decisiones/ADR-002-multimoneda-lista-fija-unidad-menor.md) (Propuestos).
+**Spec:** [`docs/superpowers/specs/2026-11-25-idiomas-pedidos-multimoneda-design.md`](../specs/2026-11-25-idiomas-pedidos-multimoneda-design.md) (Aprobado 2026-11-25). Decisiones: [ADR-001](../../decisiones/ADR-001-idiomas-next-intl-prefijo-url.md) y [ADR-002](../../decisiones/ADR-002-multimoneda-lista-fija-unidad-menor.md) (Aprobados el 2026-11-25).
 
 ## Global Constraints
 
