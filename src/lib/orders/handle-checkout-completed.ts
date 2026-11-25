@@ -1,6 +1,20 @@
 import type { PrismaClient } from '@prisma/client'
 import type Stripe from 'stripe'
 
+type SessionWithCollectedInformation = Stripe.Checkout.Session & {
+  collected_information?: {
+    shipping_details?: Stripe.Checkout.Session.ShippingDetails | null
+  } | null
+}
+
+export function getShippingDetails(session: SessionWithCollectedInformation) {
+  const collected = session.collected_information?.shipping_details
+  if (collected?.address) return collected
+
+  const legacy = session.shipping_details
+  return legacy?.address ? legacy : null
+}
+
 function addressData(address: Stripe.Address, name: string | null) {
   return {
     name: name ?? '',
@@ -31,7 +45,7 @@ export async function handleCheckoutCompleted(
       return order ? 'already_processed' : 'ignored'
     }
 
-    const shipping = session.shipping_details
+    const shipping = getShippingDetails(session)
     if (!shipping?.address) return 'paid'
 
     const customer = session.customer_details

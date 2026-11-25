@@ -60,14 +60,14 @@ describe('getShippingDetails', () => {
   it('falls back to the legacy address when collected details have no address', () => {
     const session = sessionWithShipping({
       shipping_details: legacyShipping,
-      collected_information: { shipping_details: { name: 'No Address', address: null } },
+      collected_information: { shipping_details: { name: 'No Address', address: undefined } },
     })
     expect(getShippingDetails(session)).toBe(legacyShipping)
   })
 
   it.each(['legacy', 'collected', 'both'] as const)(
     'returns null when %s shipping details have no address', (format) => {
-      const details = { name: 'No Address', address: null }
+      const details = { name: 'No Address', address: undefined }
       const session = sessionWithShipping({
         shipping_details: format !== 'collected' ? details : null,
         collected_information: { shipping_details: format !== 'legacy' ? details : null },
