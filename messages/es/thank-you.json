@@ -1,1 +1,14 @@
-{}
+{
+  "title": "Gracias por tu pedido",
+  "payment": {
+    "pending": "Confirmando tu pago…",
+    "error": "No pudimos confirmar tu pago. Actualiza esta página.",
+    "confirmed": "Tu pago está confirmado."
+  },
+  "orderNumber": "Pedido {id}",
+  "modelTitle": "Tu {model}",
+  "material": "Material",
+  "finish": "Acabado",
+  "total": "Total",
+  "shippingAddress": "Dirección de envío"
+}

@@ -6,23 +6,35 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState, type FormEvent } from 'react'
 import { updateOrderStatus } from './actions'
 
-export default function StatusSelect({ orderId, status }: { orderId: string; status: OrderStatus }) {
+type StatusSelectProps = {
+  orderId: string
+  status: OrderStatus
+  labels: {
+    options: Record<OrderStatus, string>
+    label: string
+    save: string
+    saving: string
+    error: string
+  }
+}
+
+export default function StatusSelect({ orderId, status, labels }: StatusSelectProps) {
   const router = useRouter()
   const [selectedStatus, setSelectedStatus] = useState(status)
   const [isUpdating, setIsUpdating] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [hasError, setHasError] = useState(false)
 
   useEffect(() => { setSelectedStatus(status) }, [status])
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setIsUpdating(true)
-    setError(null)
+    setHasError(false)
     try {
       await updateOrderStatus({ orderId, status: selectedStatus })
       router.refresh()
     } catch {
-      setError('Unable to update this order. Please try again.')
+      setHasError(true)
     } finally {
       setIsUpdating(false)
     }
@@ -31,7 +43,7 @@ export default function StatusSelect({ orderId, status }: { orderId: string; sta
   return (
     <form onSubmit={handleSubmit} className='space-y-2'>
       <div className='flex items-center gap-2'>
-        <label htmlFor={`status-${orderId}`} className='sr-only'>Order status</label>
+        <label htmlFor={`status-${orderId}`} className='sr-only'>{labels.label}</label>
         <select
           id={`status-${orderId}`}
           value={selectedStatus}
@@ -39,15 +51,15 @@ export default function StatusSelect({ orderId, status }: { orderId: string; sta
           disabled={isUpdating}
           className='h-9 rounded-md border border-zinc-300 bg-white px-2 text-sm focus-visible:outline-green-600 disabled:opacity-50'
         >
-          <option value='awaiting_shipment'>Awaiting shipment</option>
-          <option value='shipped'>Shipped</option>
-          <option value='fulfilled'>Delivered</option>
+          {Object.entries(labels.options).map(([value, label]) => (
+            <option key={value} value={value}>{label}</option>
+          ))}
         </select>
         <Button type='submit' size='sm' disabled={isUpdating || selectedStatus === status}>
-          {isUpdating ? 'Saving…' : 'Save'}
+          {isUpdating ? labels.saving : labels.save}
         </Button>
       </div>
-      {error && <p role='alert' className='max-w-xs text-sm text-red-600'>{error}</p>}
+      {hasError && <p role='alert' className='max-w-xs text-sm text-red-600'>{labels.error}</p>}
     </form>
   )
 }

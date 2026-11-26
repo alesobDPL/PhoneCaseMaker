@@ -1,3 +1,4 @@
+import { DEFAULT_CURRENCY, isCurrency } from '@/config/currencies'
 import { db } from '@/db'
 import { notFound } from 'next/navigation'
 
@@ -8,6 +9,7 @@ export async function getOrderSummary(orderId: string, userId: string) {
       id: true,
       isPaid: true,
       amountCents: true,
+      currency: true,
       configuration: {
         select: { croppedImageUrl: true, model: true, material: true, finish: true },
       },
@@ -18,5 +20,6 @@ export async function getOrderSummary(orderId: string, userId: string) {
   })
 
   if (!order) notFound()
-  return order
+  const { currency, ...summary } = order
+  return { ...summary, currency: isCurrency(currency) ? currency : DEFAULT_CURRENCY }
 }

@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { CURRENCIES, STRIPE_MINIMUM_AMOUNT } from '@/config/currencies'
-import { BASE_PRICE, PRODUCT_PRICES } from '@/config/products'
-import { calculatePrice, calculatePriceCents } from '@/lib/pricing'
+import { calculatePrice } from '@/lib/pricing'
 
 describe('calculatePrice', () => {
   it.each([
@@ -32,37 +31,5 @@ describe('calculatePrice', () => {
       const { amount } = calculatePrice({ material: 'silicone', finish: 'smooth' }, currency)
       expect(amount).toBeGreaterThan(STRIPE_MINIMUM_AMOUNT[currency])
     }
-  })
-})
-
-describe('calculatePriceCents', () => {
-  it('prices silicone with a smooth finish at 1400 cents', () => {
-    expect(calculatePriceCents({ material: 'silicone', finish: 'smooth' })).toBe(1400)
-  })
-
-  it('prices polycarbonate with a smooth finish at 1900 cents', () => {
-    expect(calculatePriceCents({ material: 'polycarbonate', finish: 'smooth' })).toBe(1900)
-  })
-
-  it('prices silicone with a textured finish at 1700 cents', () => {
-    expect(calculatePriceCents({ material: 'silicone', finish: 'textured' })).toBe(1700)
-  })
-
-  it('prices polycarbonate with a textured finish at 2200 cents', () => {
-    expect(calculatePriceCents({ material: 'polycarbonate', finish: 'textured' })).toBe(2200)
-  })
-
-  it('defaults null material and finish to silicone and smooth', () => {
-    expect(calculatePriceCents({ material: null, finish: null })).toBe(1400)
-    expect(calculatePriceCents({ material: null, finish: 'smooth' })).toBe(1400)
-    expect(calculatePriceCents({ material: 'silicone', finish: null })).toBe(1400)
-  })
-})
-
-it('keeps the legacy USD exports', () => {
-  expect(BASE_PRICE).toBe(14_00)
-  expect(PRODUCT_PRICES).toEqual({
-    material: { silicone: 0, polycarbonate: 5_00 },
-    finish: { smooth: 0, textured: 3_00 },
   })
 })

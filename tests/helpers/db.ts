@@ -1,7 +1,8 @@
 import { randomUUID } from 'node:crypto'
 import type { Configuration, Order, Prisma, User } from '@prisma/client'
+import { isCurrency } from '@/config/currencies'
 import { db } from '@/db'
-import { calculatePriceCents } from '@/lib/pricing'
+import { calculatePrice } from '@/lib/pricing'
 
 export async function resetDb(): Promise<void> {
   await db.$executeRaw`
@@ -39,12 +40,13 @@ export async function createOrder(
   const configuration = overrides.configurationId
     ? await db.configuration.findUniqueOrThrow({ where: { id: overrides.configurationId } })
     : await createConfiguration()
+  const currency = isCurrency(overrides.currency) ? overrides.currency : 'usd'
 
   return db.order.create({
     data: {
       userId,
       configurationId: configuration.id,
-      amountCents: calculatePriceCents(configuration),
+      amountCents: calculatePrice(configuration, currency).amount,
       ...overrides,
     },
   })

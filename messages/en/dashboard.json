@@ -1,1 +1,34 @@
-{}
+{
+  "title": "Dashboard",
+  "description": "Track paid orders and manage their shipping status.",
+  "demo": {
+    "title": "Demo mode",
+    "description": "Visitors can view sample orders and their own paid orders, and update only their own orders. Sample orders are read-only for everyone."
+  },
+  "revenue": {
+    "label": "Revenue",
+    "last7Days": "Revenue · last 7 days",
+    "last30Days": "Revenue · last 30 days",
+    "noSales": "No sales"
+  },
+  "paidOrdersByStatus": "Paid orders by status",
+  "orders": {
+    "title": "Paid orders",
+    "columns": {
+      "date": "Date",
+      "customer": "Customer",
+      "model": "Model",
+      "total": "Total",
+      "status": "Status"
+    },
+    "sampleReadOnly": "Sample · read-only",
+    "customCase": "Custom case",
+    "empty": "No paid orders yet."
+  },
+  "statusSelect": {
+    "label": "Order status",
+    "save": "Save",
+    "saving": "Saving…",
+    "error": "Unable to update this order. Please try again."
+  }
+}
