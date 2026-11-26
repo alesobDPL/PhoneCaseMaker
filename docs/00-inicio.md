@@ -6,11 +6,11 @@ Configurador de fundas personalizadas: el usuario sube una imagen, la ajusta sob
 
 - **Fase:** implementación (F6–F8, lote 0)
 - **Funcionalidad activa:** F6 Idiomas ES/EN, F7 "Mis pedidos" y F8 Multimoneda, juntas: [spec](superpowers/specs/2026-11-25-idiomas-pedidos-multimoneda-design.md) **Aprobado** el 2026-11-25; [plan](superpowers/plans/2026-11-25-idiomas-pedidos-multimoneda.md) **Aprobado** el 2026-11-25 (rama `feat/f6-f8-idiomas-pedidos-moneda`; ADR-001 y 002 aprobados). F5 Despliegue quedó terminada (en `main`, verificada en producción el 2026-11-25).
-- **Lote en curso:** 1 en preparación (el lote 0 está integrado en la rama de la funcionalidad)
+- **Lote en curso:** 1 (E10 cobro, E11 Mis pedidos y E12 configurador, 3 Codex en paralelo)
 - **Último avance:** la demo en producción funciona de punta a punta: subida de imágenes (se corrigió una variable de entorno mal formada), login con Kinde (callbacks de producción agregados) y compra de prueba con Stripe. El webhook marca el pedido como pagado una sola vez.
 - **Bloqueos:** ninguno. E6 (el webhook guarda la dirección de envío de `collected_information.shipping_details`) está en `main`, desplegado y verificado en producción con una segunda compra de prueba (2026-11-25): el pedido quedó pagado con dirección de envío y de facturación.
 - **Siguiente paso:**
-  1. Lote 1 (C cobro multimoneda, E configurador, D Mis pedidos): Opus redacta los encargos (e10 a e12); Sonnet los comprueba y los lanza en paralelo. Antes hay que traer E7 (en `main`) a la rama de la funcionalidad, con el sí del propietario.
+  1. Esperar a Codex (E10, E11, E12). Al entregar: auditar cada uno, integrar C (E10), luego D (E11) y E (E12) rebasado sobre C, y probar el conjunto. E12 puede entregar con el typecheck rojo solo por la firma nueva de `createCheckoutSession`, hasta rebasarlo sobre E10.
   2. Lote 0 cerrado: E8 (501a61b) y E9 (2ac4a09) integrados en `feat/f6-f8-idiomas-pedidos-moneda`; unit 81, integración 32 y e2e 14/14.
   3. E7 `onUploadError` integrado en `main` (2026-11-25, sin push ni despliegue). Pendiente, con el sí del propietario: limpiar su worktree y rama, y publicarlo.
   4. El enlace al tutorial del README **no se pondrá** (decisión del propietario).
@@ -20,6 +20,9 @@ Configurador de fundas personalizadas: el usuario sube una imagen, la ajusta sob
 | --- | --- | --- | --- |
 | E6 webhook-direccion | — | integrado, desplegado y verificado | — (worktree y rama ya eliminados) |
 | E7 onuploaderror | — | integrado en main (48e5369), sin publicar | Limpiar worktree y rama; push y despliegue con el sí del propietario |
+| E10 cobro-multimoneda | 1 | en curso (Codex) | Esperar entrega y auditar |
+| E11 mis-pedidos | 1 | en curso (Codex) | Esperar entrega y auditar |
+| E12 configurador | 1 | en curso (Codex) | Esperar entrega y auditar |
 | E8 base-dinero | 0 | integrado en la rama de la funcionalidad (501a61b) | — |
 | E9 base-idiomas | 0 | integrado en la rama de la funcionalidad (2ac4a09) | — |
 
