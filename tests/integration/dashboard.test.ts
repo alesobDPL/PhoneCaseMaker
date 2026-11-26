@@ -113,6 +113,27 @@ it('revenue counts only paid orders in the window', async () => {
   const data = await getDashboardData(admin, demoEnv)
   expect(data.revenue7dCents).toBe(3300)
   expect(data.revenue30dCents).toBe(7200)
+  expect(data.revenue7dByCurrency).toEqual({ usd: 3300 })
+  expect(data.revenue30dByCurrency).toEqual({ usd: 7200 })
   expect(data.orders).toHaveLength(5)
   expect(data.countsByStatus).toEqual({ awaiting_shipment: 1, shipped: 1, fulfilled: 3 })
+})
+
+it('separates paid revenue by currency in each window and keeps the USD totals', async () => {
+  const admin = await createUser(demoEnv.adminEmail)
+  const now = new Date('2026-11-23T12:00:00Z').getTime()
+  vi.spyOn(Date, 'now').mockReturnValue(now)
+  const day = 24 * 60 * 60 * 1000
+  const recent = new Date(now - day)
+
+  await createOrder({ isPaid: true, currency: 'usd', amountCents: 1400, createdAt: recent })
+  await createOrder({ isPaid: true, currency: 'eur', amountCents: 1300, createdAt: recent })
+  await createOrder({ isPaid: true, currency: 'clp', amountCents: 13990, createdAt: recent })
+  await createOrder({ isPaid: true, currency: 'eur', amountCents: 500, createdAt: new Date(now - 8 * day) })
+
+  const data = await getDashboardData(admin, demoEnv)
+  expect(data.revenue7dByCurrency).toEqual({ usd: 1400, eur: 1300, clp: 13990 })
+  expect(data.revenue30dByCurrency).toEqual({ usd: 1400, eur: 1800, clp: 13990 })
+  expect(data.revenue7dCents).toBe(1400)
+  expect(data.revenue30dCents).toBe(1400)
 })

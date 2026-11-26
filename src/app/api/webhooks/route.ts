@@ -21,9 +21,23 @@ export async function POST(req: Request): Promise<Response> {
     }
 
     if (event.type === 'checkout.session.completed') {
-      const result = await handleCheckoutCompleted(event.data.object, db)
+      const session = event.data.object
+      const result = await handleCheckoutCompleted(session, db)
       if (result === 'ignored') {
         console.warn('Checkout webhook ignored: missing metadata or unknown order')
+      } else if (result === 'mismatch') {
+        const orderId = session.metadata?.orderId
+        const order = orderId ? await db.order.findUnique({
+          where: { id: orderId },
+          select: { amountCents: true, currency: true },
+        }) : null
+        console.error('Checkout webhook payment mismatch', {
+          orderId,
+          expectedAmount: order?.amountCents,
+          expectedCurrency: order?.currency,
+          receivedAmount: session.amount_total,
+          receivedCurrency: session.currency,
+        })
       }
     }
 
