@@ -5,7 +5,7 @@ import { Icons } from "@/components/Icons";
 import { ArrowRight, Check, Star } from "lucide-react";
 import Image from "next/image";
 import { Reviews } from "@/components/Reviews";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { buttonVariants } from "@/components/ui/button";
 
 export default function Home() {

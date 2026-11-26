@@ -28,5 +28,5 @@ export async function updateOrderStatus({ orderId, status }: {
     data: { Status: status },
   })
   if (result.count !== 1) throw new Error('Unauthorized')
-  revalidatePath('/dashboard')
+  revalidatePath('/[locale]/dashboard', 'page')
 }

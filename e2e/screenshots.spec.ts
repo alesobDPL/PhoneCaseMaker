@@ -10,7 +10,7 @@ test.describe('Portfolio captures @screenshots', () => {
   })
 
   test('home', async ({ page }) => {
-    await page.goto('/')
+    await page.goto('/es')
     await expect(page.getByRole('heading', {
       level: 1,
       name: /Your Image on a Custom\s*Phone Case/,
@@ -19,13 +19,13 @@ test.describe('Portfolio captures @screenshots', () => {
   })
 
   test('upload', async ({ page }) => {
-    await page.goto('/configure/upload')
+    await page.goto('/es/configure/upload')
     await expect(page.getByText('Click to upload')).toBeVisible()
     await page.screenshot({ path: resolve('docs/assets/upload.png'), animations: 'disabled' })
   })
 
   test('design', async ({ page, configurationId }) => {
-    await page.goto(`/configure/design?id=${configurationId}`)
+    await page.goto(`/es/configure/design?id=${configurationId}`)
     await expect(page.getByRole('heading', { name: 'Customize your case' })).toBeVisible()
     await expect(page.getByAltText('your image')).toHaveJSProperty('complete', true)
     await expect(page.getByAltText('your image')).not.toHaveJSProperty('naturalWidth', 0)
@@ -33,7 +33,7 @@ test.describe('Portfolio captures @screenshots', () => {
   })
 
   test('preview', async ({ page, configurationId }) => {
-    await page.goto(`/configure/preview?id=${configurationId}`)
+    await page.goto(`/es/configure/preview?id=${configurationId}`)
     await expect(page.getByRole('heading', { name: 'Your iPhone 15' })).toBeVisible()
     await expect(page.getByAltText('overlaying phone image')).not.toHaveJSProperty('naturalWidth', 0)
     await page.screenshot({ path: resolve('docs/assets/preview.png'), animations: 'disabled' })

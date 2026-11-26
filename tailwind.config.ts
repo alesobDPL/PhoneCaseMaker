@@ -19,6 +19,9 @@ const config = {
       },
     },
     extend: {
+      spacing: { nav: "var(--nav-height)" },
+      minHeight: { touch: "var(--touch-target)" },
+      minWidth: { touch: "var(--touch-target)" },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -52,6 +55,23 @@ const config = {
         card: {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
+        },
+        status: {
+          pending: {
+            DEFAULT: "hsl(var(--status-pending))",
+            foreground: "hsl(var(--status-pending-foreground))",
+            border: "hsl(var(--status-pending-border))",
+          },
+          shipped: {
+            DEFAULT: "hsl(var(--status-shipped))",
+            foreground: "hsl(var(--status-shipped-foreground))",
+            border: "hsl(var(--status-shipped-border))",
+          },
+          delivered: {
+            DEFAULT: "hsl(var(--status-delivered))",
+            foreground: "hsl(var(--status-delivered-foreground))",
+            border: "hsl(var(--status-delivered-border))",
+          },
         },
       },
       borderRadius: {

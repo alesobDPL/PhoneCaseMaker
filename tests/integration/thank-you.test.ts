@@ -2,7 +2,7 @@ import { mockKindeUser } from '../helpers/auth'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { db } from '@/db'
 import { createOrder, createUser, resetDb } from '../helpers/db'
-import { getPaymentStatus } from '@/app/thank-you/actions'
+import { getPaymentStatus } from '@/app/[locale]/thank-you/actions'
 import { getOrderSummary } from '@/lib/orders/get-order-summary'
 import { parseOrderIdParam } from '@/lib/orders/parse-order-id-param'
 

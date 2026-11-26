@@ -24,6 +24,17 @@
       --border: 240 5.9% 90%;
       --input: 240 5.9% 90%;
       --ring: 142.1 76.2% 36.3%;
+      --status-pending: 48 100% 96.1%;
+      --status-pending-foreground: 22.7 82.5% 31.4%;
+      --status-pending-border: 48 96.6% 76.7%;
+      --status-shipped: 213.8 100% 96.9%;
+      --status-shipped-foreground: 225.9 70.7% 40.2%;
+      --status-shipped-border: 213.3 96.9% 87.3%;
+      --status-delivered: 151.8 81% 95.9%;
+      --status-delivered-foreground: 163.1 88.1% 19.8%;
+      --status-delivered-border: 152.4 76% 80.4%;
+      --nav-height: 3.5rem;
+      --touch-target: 2.75rem;
       --radius: 0.5rem;
     }
   
@@ -47,6 +58,15 @@
       --border: 240 3.7% 15.9%;
       --input: 240 3.7% 15.9%;
       --ring: 142.4 71.8% 29.2%;
+      --status-pending: 22.7 82.5% 31.4%;
+      --status-pending-foreground: 48 100% 96.1%;
+      --status-pending-border: 48 96.6% 76.7%;
+      --status-shipped: 225.9 70.7% 40.2%;
+      --status-shipped-foreground: 213.8 100% 96.9%;
+      --status-shipped-border: 213.3 96.9% 87.3%;
+      --status-delivered: 163.1 88.1% 19.8%;
+      --status-delivered-foreground: 151.8 81% 95.9%;
+      --status-delivered-border: 152.4 76% 80.4%;
     }
   }
   

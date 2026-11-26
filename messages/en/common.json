@@ -1,0 +1,38 @@
+{
+  "nav": {
+    "brand": "case<accent>Maker</accent>",
+    "orders": "My orders",
+    "dashboard": "Dashboard",
+    "signIn": "Sign in",
+    "signUp": "Sign up",
+    "signOut": "Sign out",
+    "createCase": "Create case",
+    "menu": "Menu",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "locale": {
+    "label": "Language",
+    "changeAria": "Change language, current: {current}",
+    "es": "Español",
+    "en": "English",
+    "esCode": "ES",
+    "enCode": "EN"
+  },
+  "currency": {
+    "label": "Currency",
+    "changeAria": "Change currency, current: {code}",
+    "usd": "US dollar",
+    "eur": "Euro",
+    "clp": "Chilean peso"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you’re looking for is unavailable.",
+    "backHome": "Back to home"
+  },
+  "meta": {
+    "title": "caseMaker",
+    "description": "Create a custom phone case with your image."
+  }
+}

@@ -4,7 +4,7 @@ import type Stripe from 'stripe'
 import { db } from '@/db'
 import { stripe } from '@/lib/stripe'
 import { createConfiguration, createOrder, createUser, resetDb } from '../helpers/db'
-import { createCheckoutSession } from '@/app/configure/preview/actions'
+import { createCheckoutSession } from '@/app/[locale]/configure/preview/actions'
 
 describe('checkout session', () => {
   beforeEach(async () => {
