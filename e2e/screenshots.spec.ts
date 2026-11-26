@@ -80,7 +80,7 @@ for (const { locale, browserLocale, common, configure } of languages) {
       test('signed-out navbar', async ({ page }) => {
         await page.goto(`/${locale}`)
         const nav = navbar(page)
-        await expect(nav.getByRole('link', { name: common.nav.brand.replace(/<\/?accent>/g, '') })).toBeVisible()
+        await expect(nav.getByRole('link').and(nav.locator(`[href="/${locale}"]`))).toBeVisible()
         const entry = mobile
           ? nav.getByRole('button', { name: common.nav.openMenu })
           : nav.getByRole('link', { name: common.nav.signIn })

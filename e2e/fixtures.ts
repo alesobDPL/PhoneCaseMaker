@@ -140,6 +140,7 @@ async function interceptOrdersNavigation<T>(
   common: CommonMessages,
   intercept: (route: Route) => Promise<void>,
   observe: () => Promise<T>,
+  beforeUnroute?: () => Promise<void>,
 ) {
   const matches = (url: URL) => url.pathname === `/${locale}/orders` && url.searchParams.has('_rsc')
   const handler = (route: Route) => route.request().headers()['next-router-prefetch']
@@ -163,6 +164,7 @@ async function interceptOrdersNavigation<T>(
     ])
     return await observe()
   } finally {
+    await beforeUnroute?.()
     await page.unroute(matches, handler)
   }
 }
@@ -172,18 +174,27 @@ export async function withOrdersLoading(
 ) {
   let release!: () => void
   const pending = new Promise<void>(resolve => { release = resolve })
-  try {
-    await interceptOrdersNavigation(page, locale, common, async route => {
-      await pending
-      await route.continue()
-    }, async () => {
-      const loading = page.getByTestId('orders-loading')
-      await expect(loading).toBeVisible()
-      await observe(loading)
-    })
-  } finally {
+  const continuations = new Map<Route, Promise<void>>()
+  let releasing = false
+
+  await interceptOrdersNavigation(page, locale, common, route => {
+    const continuation = continuations.get(route)
+    if (continuation) return continuation
+    if (releasing) return route.fallback()
+
+    const resumed = pending.then(() => route.continue())
+    continuations.set(route, resumed)
+    return resumed
+  }, async () => {
+    const loading = page.getByTestId('orders-loading')
+    await expect(loading).toBeVisible()
+    await observe(loading)
+  }, async () => {
+    // Removing the interceptor can resume requests that are still paused.
+    releasing = true
     release()
-  }
+    await Promise.allSettled(continuations.values())
+  })
 }
 
 export async function showOrdersError(page: Page, locale: string, common: CommonMessages) {
