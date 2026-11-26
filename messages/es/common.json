@@ -55,6 +55,9 @@
       "description": "Revisa tu diseño final"
     }
   },
+  "dialog": {
+    "close": "Cerrar"
+  },
   "loginModal": {
     "imageAlt": "Ilustración de una serpiente",
     "title": "Inicia sesión para continuar",
