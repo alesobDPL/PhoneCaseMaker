@@ -1,29 +1,34 @@
 "use client"
 
 import { AspectRatio } from "@/components/ui/aspect-ratio"
-import { cn, formatPrice } from "@/lib/utils"
+import { cn } from "@/lib/utils"
 import {Rnd} from "react-rnd"
 import NextImage from "next/image"
 import HandleComponent from "@/components/HandleComponent"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { RadioGroup } from "@headlessui/react"
 import { COLORS, FINISHES, MATERIALS, MODELS } from "@/validators/option-validators"
-import { use, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import { Label } from "@/components/ui/label"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Check, ChevronsUpDown } from "lucide-react"
-import { BASE_PRICE } from "@/config/products"
-import { getUploadErrorMessage } from "@/lib/upload-errors"
+import type { Currency } from "@/config/currencies"
+import { PRICE_LIST } from "@/config/products"
+import { formatMoney } from "@/lib/money"
+import { calculatePrice } from "@/lib/pricing"
+import { getUploadErrorKey } from "@/lib/upload-errors"
 import { useUploadThing } from "@/lib/uploadthing"
 import { useToast } from "@/hooks/use-toast"
 import { useMutation } from "@tanstack/react-query"
 import { saveConfig as _saveConfig,
      SaveConfigArgs } from "./actions"
 import { useRouter } from "@/i18n/navigation"
+import { useLocale, useTranslations } from "next-intl"
 
 interface DesignConfiguratorProps {
   configId: string
+  currency: Currency
   imageUrl: string
   imageDimensions: { width: number; height: number }
 }
@@ -32,9 +37,12 @@ class CropUploadError extends Error {}
 
 const DesignConfigurator = ({
   configId,
+  currency,
   imageUrl,
   imageDimensions,
 }: DesignConfiguratorProps) => {
+  const locale = useLocale()
+  const t = useTranslations('configure')
   const { toast } = useToast()
   const router = useRouter()
 
@@ -49,13 +57,10 @@ const DesignConfigurator = ({
       ])
     },
     onError: (error) => {
-      const message = error instanceof CropUploadError
-        ? getUploadErrorMessage(error.cause)
-        : {
-            title: 'Something went wrong',
-            description: 'There was an error on our end. Please try again.',
-          }
-      toast({ ...message, variant: 'destructive' })
+      const key = error instanceof CropUploadError
+        ? `uploadErrors.${getUploadErrorKey(error.cause)}` as const
+        : 'design.saveError'
+      toast({ title: t(`${key}.title`), description: t(`${key}.description`), variant: 'destructive' })
     },
     onSuccess: () => {
       router.push(`/configure/preview?id=${configId}`)
@@ -73,6 +78,19 @@ const DesignConfigurator = ({
     material: MATERIALS.options[0],
     finish: FINISHES.options[0],
   })
+
+  const prices = PRICE_LIST[currency]
+  const optionGroups = [
+    {
+      name: MATERIALS.name,
+      options: MATERIALS.options.map((option) => ({ option, price: prices.material[option.value] })),
+    },
+    {
+      name: FINISHES.name,
+      options: FINISHES.options.map((option) => ({ option, price: prices.finish[option.value] })),
+    },
+  ]
+  const total = calculatePrice({ material: options.material.value, finish: options.finish.value }, currency).amount
 
   const [renderedDimension, setRenderedDimension] = useState({
     width: imageDimensions.width / 4,
@@ -162,7 +180,7 @@ const DesignConfigurator = ({
             className='pointer-events-none relative z-50 aspect-[896/1831] w-full'>
             <NextImage
               fill
-              alt='phone image'
+              alt={t('design.phoneTemplateAlt')}
               src='/phone-template.png'
               className='pointer-events-none z-50 select-none'
             />
@@ -207,7 +225,7 @@ const DesignConfigurator = ({
             <NextImage
               src={imageUrl}
               fill
-              alt='your image'
+              alt={t('design.uploadedImageAlt')}
               className='pointer-events-none'
             />
           </div>
@@ -223,7 +241,7 @@ const DesignConfigurator = ({
 
           <div className='px-8 pb-12 pt-8'>
             <h2 className='tracking-tight font-bold text-3xl'>
-              Customize your case
+              {t('design.title')}
             </h2>
 
             <div className='w-full h-px bg-zinc-200 my-6' />
@@ -238,12 +256,13 @@ const DesignConfigurator = ({
                       color: val,
                     }))
                   }}>
-                  <Label>Color: {options.color.label}</Label>
+                  <Label>{t('design.selectedColor', { color: t(`options.color.${options.color.value}`) })}</Label>
                   <div className='mt-3 flex items-center space-x-3'>
                     {COLORS.map((color) => (
                       <RadioGroup.Option
-                        key={color.label}
+                        key={color.value}
                         value={color}
+                        aria-label={t(`options.color.${color.value}`)}
                         className={({ active, checked }) =>
                           cn(
                             'relative -m-0.5 flex cursor-pointer items-center justify-center rounded-full p-0.5 active:ring-0 focus:ring-0 active:outline-none focus:outline-none border-2 border-transparent',
@@ -264,7 +283,7 @@ const DesignConfigurator = ({
                 </RadioGroup>
 
                 <div className='relative flex flex-col gap-3 w-full'>
-                  <Label>Model</Label>
+                  <Label>{t('design.model')}</Label>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button
@@ -272,7 +291,7 @@ const DesignConfigurator = ({
                         role='combobox'
                         className='w-full justify-between'>
                         {options.model.label}
-                        <ChevronsUpDown className='ml-2 h-4 w-4 shrink-0 opacity-50' />
+                        <ChevronsUpDown aria-hidden='true' className='ml-2 h-4 w-4 shrink-0 opacity-50' />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
@@ -290,6 +309,7 @@ const DesignConfigurator = ({
                             setOptions((prev) => ({ ...prev, model }))
                           }}>
                           <Check
+                            aria-hidden='true'
                             className={cn(
                               'mr-2 h-4 w-4',
                               model.label === options.model.label
@@ -304,7 +324,7 @@ const DesignConfigurator = ({
                   </DropdownMenu>
                 </div>
 
-                {[MATERIALS, FINISHES].map(
+                {optionGroups.map(
                   ({ name, options: selectableOptions }) => (
                     <RadioGroup
                       key={name}
@@ -316,10 +336,10 @@ const DesignConfigurator = ({
                         }))
                       }}>
                       <Label>
-                        {name.slice(0, 1).toUpperCase() + name.slice(1)}
+                        {t(`design.${name}`)}
                       </Label>
                       <div className='mt-3 space-y-4'>
-                        {selectableOptions.map((option) => (
+                        {selectableOptions.map(({ option, price }) => (
                           <RadioGroup.Option
                             key={option.value}
                             value={option}
@@ -336,7 +356,7 @@ const DesignConfigurator = ({
                                 <RadioGroup.Label
                                   className='font-medium text-gray-900'
                                   as='span'>
-                                  {option.label}
+                                  {t(`options.${name}.${option.value}`)}
                                 </RadioGroup.Label>
 
                                 {option.description ? (
@@ -344,7 +364,7 @@ const DesignConfigurator = ({
                                     as='span'
                                     className='text-gray-500'>
                                     <span className='block sm:inline'>
-                                      {option.description}
+                                      {t(`options.descriptions.${option.value}`)}
                                     </span>
                                   </RadioGroup.Description>
                                 ) : null}
@@ -355,7 +375,7 @@ const DesignConfigurator = ({
                               as='span'
                               className='mt-2 flex text-sm sm:ml-4 sm:mt-0 sm:flex-col sm:text-right'>
                               <span className='font-medium text-gray-900'>
-                                {formatPrice(option.price / 100)}
+                                {formatMoney(price, currency, locale)}
                               </span>
                             </RadioGroup.Description>
                           </RadioGroup.Option>
@@ -374,15 +394,12 @@ const DesignConfigurator = ({
           <div className='w-full h-full flex justify-end items-center'>
             <div className='w-full flex gap-6 items-center'>
               <p className='font-medium whitespace-nowrap'>
-                {formatPrice(
-                  (BASE_PRICE + options.finish.price + options.material.price) /
-                    100
-                )}
+                {formatMoney(total, currency, locale)}
               </p>
               <Button
                 isLoading={isPending}
                 disabled={isPending}
-                loadingText="Saving"
+                loadingText={t('design.saving')}
                 onClick={() =>
                   saveConfig({
                     configId,
@@ -394,8 +411,8 @@ const DesignConfigurator = ({
                 }
                 size='sm'
                 className='w-full'>
-                Continue
-                <ArrowRight className='h-4 w-4 ml-1.5 inline' />
+                {t('design.continue')}
+                <ArrowRight aria-hidden='true' className='h-4 w-4 ml-1.5 inline' />
               </Button>
             </div>
           </div>

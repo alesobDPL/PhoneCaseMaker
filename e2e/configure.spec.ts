@@ -1,5 +1,8 @@
-import { UPLOAD_ERROR_MESSAGES } from '../src/lib/upload-errors'
+import en from '../messages/en/configure.json'
+import es from '../messages/es/configure.json'
 import { expect, test } from './fixtures'
+
+test.use({ locale: 'en-US' })
 
 test('home shows demo banner with test card when DEMO_MODE', async ({ page }) => {
   test.skip(process.env.DEMO_MODE !== 'true', 'Requires DEMO_MODE=true')
@@ -13,12 +16,36 @@ test('home shows demo banner with test card when DEMO_MODE', async ({ page }) =>
     .toHaveAttribute('href', '/dashboard')
 })
 
-test('upload page renders the dropzone', async ({ page }) => {
-  await page.goto('/es/configure/upload')
+test.describe('Spanish configurator', () => {
+  test.use({ locale: 'es-CL' })
 
-  await expect(page.getByText('Click to upload')).toBeVisible()
-  await expect(page.getByText('or drag and drop')).toBeVisible()
-  await expect(page.locator('input[type="file"]')).toHaveAttribute('accept', /image\/png/)
+  test('upload page renders the dropzone', async ({ page }) => {
+    await page.goto('/es/configure/upload')
+
+    await expect(page.getByText(es.upload.clickToUpload, { exact: true })).toBeVisible()
+    await expect(page.getByText(es.upload.orDragAndDrop)).toBeVisible()
+    await expect(page.locator('input[type="file"]')).toHaveAttribute('accept', /image\/png/)
+  })
+
+  test('preview displays the CLP total without decimals', async ({ page, context, baseURL, configurationId }) => {
+    await context.addCookies([{ name: 'CURRENCY', value: 'clp', url: new URL('/', baseURL).href }])
+    await page.goto(`/es/configure/preview?id=${configurationId}`)
+
+    const total = page.getByText(es.preview.orderTotal, { exact: true }).locator('..')
+    await expect(total).toContainText('21.970')
+    await expect(total).not.toContainText(',00')
+    await expect(page.getByText(es.preview.chargedIn.replace('{currency}', 'CLP'))).toBeVisible()
+  })
+})
+
+test('preview displays the EUR total and checkout currency', async ({ page, context, baseURL, configurationId }) => {
+  await context.addCookies([{ name: 'CURRENCY', value: 'eur', url: new URL('/', baseURL).href }])
+  await page.goto(`/en/configure/preview?id=${configurationId}`)
+
+  const total = page.getByText(en.preview.orderTotal, { exact: true }).locator('..')
+  await expect(total).toContainText('21.00')
+  await expect(page.getByText(en.preview.chargedIn.replace('{currency}', 'EUR'))).toBeVisible()
+  await expect(page.getByText(en.options.material.polycarbonate, { exact: true })).toBeVisible()
 })
 
 test('upload page shows an error and resets the dropzone after a failed upload', async ({ page }) => {
@@ -30,7 +57,7 @@ test('upload page shows an error and resets the dropzone after a failed upload',
     }
   })
 
-  await page.goto('/es/configure/upload')
+  await page.goto('/en/configure/upload')
   await page.locator('input[type="file"]').setInputFiles({
     name: 'image.png',
     mimeType: 'image/png',
@@ -40,12 +67,12 @@ test('upload page shows an error and resets the dropzone after a failed upload',
     ),
   })
 
-  await expect(page.getByText(UPLOAD_ERROR_MESSAGES.generic.title, { exact: true })).toBeVisible()
-  await expect(page.getByText('Click to upload', { exact: true })).toBeVisible()
+  await expect(page.getByText(en.uploadErrors.generic.title, { exact: true })).toBeVisible()
+  await expect(page.getByText(en.upload.clickToUpload, { exact: true })).toBeVisible()
 })
 
 test('preview without session opens the login modal', async ({ page, configurationId }) => {
-  await page.goto(`/es/configure/preview?id=${configurationId}`)
+  await page.goto(`/en/configure/preview?id=${configurationId}`)
 
   await expect(page.getByRole('heading', { name: 'Your iPhone 15' })).toBeVisible()
   await page.getByRole('button', { name: 'Check out' }).click()

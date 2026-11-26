@@ -1,1 +1,97 @@
-{}
+{
+  "upload": {
+    "uploading": "Uploading...",
+    "redirecting": "Redirecting, please wait...",
+    "dropFile": "Drop the file",
+    "toUpload": "to upload it",
+    "clickToUpload": "Click to upload",
+    "orDragAndDrop": "or drag and drop",
+    "supportedFormats": "PNG, JPG, JPEG"
+  },
+  "uploadErrors": {
+    "tooLarge": {
+      "title": "File is too large.",
+      "description": "Please choose an image of up to 4 MB."
+    },
+    "invalidFile": {
+      "title": "Invalid image file.",
+      "description": "Please choose a PNG, JPG, or JPEG image of up to 4 MB."
+    },
+    "generic": {
+      "title": "Upload failed.",
+      "description": "Please try again."
+    },
+    "unsupportedType": {
+      "title": "This file type is not supported.",
+      "description": "Please choose a PNG, JPG, or JPEG image instead."
+    }
+  },
+  "design": {
+    "title": "Customize your case",
+    "phoneTemplateAlt": "Phone template",
+    "uploadedImageAlt": "Your image",
+    "selectedColor": "Color: {color}",
+    "model": "Model",
+    "material": "Material",
+    "finish": "Finish",
+    "continue": "Continue",
+    "saving": "Saving",
+    "saveError": {
+      "title": "Could not save your configuration",
+      "description": "Please try again."
+    }
+  },
+  "options": {
+    "color": {
+      "black": "Black",
+      "blue": "Blue",
+      "rose": "Rose"
+    },
+    "material": {
+      "silicone": "Silicone",
+      "polycarbonate": "Soft Polycarbonate"
+    },
+    "finish": {
+      "smooth": "Smooth Finish",
+      "textured": "Textured Finish"
+    },
+    "descriptions": {
+      "polycarbonate": "Scratch-resistant coating",
+      "textured": "Soft grippy texture"
+    }
+  },
+  "preview": {
+    "title": "Your {model}",
+    "inStock": "In stock and ready to ship",
+    "highlights": {
+      "title": "Highlights",
+      "wirelessCharging": "Wireless charging compatible",
+      "shockAbsorption": "TPU shock absorption",
+      "recycledPackaging": "Packaging made from recycled materials",
+      "printWarranty": "5-year print warranty"
+    },
+    "materials": {
+      "title": "Materials",
+      "durable": "High-quality, durable material",
+      "resistantCoating": "Scratch and fingerprint resistant coating"
+    },
+    "basePrice": "Base price",
+    "orderTotal": "Order total",
+    "chargedIn": "You will be charged in {currency}",
+    "checkout": "Check out"
+  },
+  "checkoutErrors": {
+    "not_found": {
+      "title": "Configuration not found",
+      "description": "Open a saved configuration or create a new one before checking out."
+    },
+    "invalid_currency": {
+      "title": "Currency unavailable",
+      "description": "Choose another currency and try again."
+    },
+    "stripe_error": {
+      "title": "Could not start checkout",
+      "description": "Please try again."
+    }
+  }
+}

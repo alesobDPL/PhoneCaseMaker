@@ -1,4 +1,5 @@
 import { db } from '@/db'
+import { getCurrencyPreference } from '@/lib/currency-preference'
 import { notFound } from 'next/navigation'
 import DesignConfigurator from './DesignConfigurator'
 
@@ -23,10 +24,12 @@ const Page = async ({ searchParams }: PageProps) => {
   }
 
   const { imageUrl, width, height } = configuration;
+  const currency = await getCurrencyPreference()
 
   return (
     <DesignConfigurator
       configId={configuration.id}
+      currency={currency}
       imageDimensions={{ width, height }}
       imageUrl={imageUrl}
     />
