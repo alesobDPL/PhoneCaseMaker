@@ -1,12 +1,11 @@
 'use server'
 
 import { db } from '@/db'
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
+import { getSessionUser } from '@/lib/auth/session'
 import { notFound } from 'next/navigation'
 
 export async function getPaymentStatus({ orderId }: { orderId: string }): Promise<{ isPaid: boolean }> {
-  const { getUser } = getKindeServerSession()
-  const user = await getUser()
+  const user = await getSessionUser()
   if (!user) notFound()
 
   const order = await db.order.findFirst({

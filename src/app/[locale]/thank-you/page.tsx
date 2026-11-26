@@ -1,6 +1,6 @@
 import { getOrderSummary } from '@/lib/orders/get-order-summary'
 import { parseOrderIdParam } from '@/lib/orders/parse-order-id-param'
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
+import { getSessionUser } from '@/lib/auth/session'
 import { notFound } from 'next/navigation'
 import ThankYou from './ThankYou'
 
@@ -12,8 +12,7 @@ export default async function ThankYouPage({ searchParams }: PageProps) {
   const orderId = parseOrderIdParam((await searchParams).orderId)
   if (!orderId) notFound()
 
-  const { getUser } = getKindeServerSession()
-  const user = await getUser()
+  const user = await getSessionUser()
   if (!user) notFound()
 
   const order = await getOrderSummary(orderId, user.id)

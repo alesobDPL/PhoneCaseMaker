@@ -1,11 +1,10 @@
 'use server'
 
 import { db } from '@/db'
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
+import { getSessionUser } from '@/lib/auth/session'
 
 export const getAuthStatus = async () => {
-  const { getUser } = getKindeServerSession()
-  const user = await getUser()
+  const user = await getSessionUser()
 
   if (!user?.id || !user.email) {
     throw new Error('Invalid user data')

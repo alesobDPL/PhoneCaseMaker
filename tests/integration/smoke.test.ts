@@ -3,7 +3,7 @@ import { mockKindeUser } from '../helpers/auth'
 import { createOrder, resetDb } from '../helpers/db'
 import { signedStripeRequest } from '../helpers/stripe'
 import { db } from '@/db'
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
+import { getSessionUser } from '@/lib/auth/session'
 import Stripe from 'stripe'
 
 beforeEach(resetDb)
@@ -20,9 +20,15 @@ it('creates an order and resets the database with usable auth and Stripe helpers
 
   const user = await db.user.findUniqueOrThrow({ where: { id: order.userId } })
   mockKindeUser(user)
-  expect(await getKindeServerSession().getUser()).toEqual({ id: user.id, email: user.email })
+  expect(await getSessionUser()).toEqual({
+    id: user.id,
+    email: user.email,
+    given_name: null,
+    family_name: null,
+    picture: null,
+  })
   mockKindeUser(null)
-  expect(await getKindeServerSession().getUser()).toBeNull()
+  expect(await getSessionUser()).toBeNull()
 
   const event = { id: 'evt_smoke', type: 'checkout.session.completed', data: { object: {} } }
   const request = signedStripeRequest(event)
