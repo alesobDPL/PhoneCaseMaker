@@ -1,1 +1,49 @@
-{}
+{
+  "title": "My orders",
+  "manualStatusNote": "Shipping status is updated manually by the store.",
+  "signedOut": {
+    "title": "Sign in to view your orders",
+    "description": "Use the account you made your purchases with.",
+    "signIn": "Sign in"
+  },
+  "empty": {
+    "title": "You have no orders yet",
+    "description": "When you complete a purchase, it will appear here.",
+    "createCase": "Create my case"
+  },
+  "loading": "Loading orders",
+  "error": {
+    "message": "We couldn’t load your orders.",
+    "retry": "Try again"
+  },
+  "card": {
+    "title": "Case for {model}",
+    "unknownModelTitle": "Custom case",
+    "number": "#{id}",
+    "options": "{material} · {finish} · {color}",
+    "preview": "Case preview",
+    "previewUnavailable": "Case preview unavailable"
+  },
+  "viewSummary": "View summary",
+  "status": {
+    "awaiting_shipment": "Preparing shipment",
+    "shipped": "Shipped",
+    "fulfilled": "Delivered"
+  },
+  "options": {
+    "unspecified": "Unspecified",
+    "color": {
+      "black": "Black",
+      "blue": "Blue",
+      "rose": "Rose"
+    },
+    "material": {
+      "silicone": "Silicone",
+      "polycarbonate": "Polycarbonate"
+    },
+    "finish": {
+      "smooth": "Smooth",
+      "textured": "Textured"
+    }
+  }
+}
