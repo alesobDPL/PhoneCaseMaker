@@ -14,13 +14,16 @@ test('uses Spanish when neither the cookie nor the browser specifies a language'
   await expect(page.locator('html')).toHaveAttribute('lang', 'es')
 })
 
-test('gives the language cookie precedence over the browser', async ({ page, context, baseURL }) => {
-  await page.setExtraHTTPHeaders({ 'Accept-Language': 'es-CL' })
-  await context.addCookies([{ name: 'NEXT_LOCALE', value: 'en', url: new URL('/', baseURL).href }])
+test.describe('Spanish browser locale', () => {
+  test.use({ locale: 'es-CL' })
 
-  await page.goto('/')
-  await expect(page).toHaveURL(/\/en$/)
-  await expect(page.locator('html')).toHaveAttribute('lang', 'en')
+  test('gives the language cookie precedence over the browser', async ({ page, context, baseURL }) => {
+    await context.addCookies([{ name: 'NEXT_LOCALE', value: 'en', url: new URL('/', baseURL).href }])
+
+    await page.goto('/')
+    await expect(page).toHaveURL(/\/en$/)
+    await expect(page.locator('html')).toHaveAttribute('lang', 'en')
+  })
 })
 
 test('uses the browser language in the absence of a cookie', async ({ page }) => {
@@ -63,14 +66,18 @@ test('preserves the preview query and saves the selected language', async ({ pag
   expect(cookie!.expires - Date.now() / 1000).toBeGreaterThan(364 * 24 * 60 * 60)
 })
 
-test('renders the Spanish 404 for an unsupported locale', async ({ page }) => {
-  await page.setExtraHTTPHeaders({ 'Accept-Language': 'fr-FR' })
-  const response = await page.goto('/fr/configure/upload')
+test.describe('French browser locale', () => {
+  test.use({ locale: 'fr-FR' })
 
-  expect(response?.status()).toBe(404)
-  await expect(page.locator('html')).toHaveAttribute('lang', 'es')
-  await expect(page.getByRole('heading', { name: es.notFound.title })).toBeVisible()
-  await expect(page.getByRole('link', { name: es.notFound.backHome })).toHaveAttribute('href', '/es')
+  test('renders the Spanish 404 for an unsupported locale', async ({ page }) => {
+    const response = await page.goto('/fr/configure/upload')
+
+    expect(response?.status()).toBe(404)
+    await expect(page).toHaveURL('/es/fr/configure/upload')
+    await expect(page.locator('html')).toHaveAttribute('lang', 'es')
+    await expect(page.getByRole('heading', { name: es.notFound.title })).toBeVisible()
+    await expect(page.getByRole('link', { name: es.notFound.backHome })).toHaveAttribute('href', '/es')
+  })
 })
 
 test('renders the English 404 for an unknown path under /en', async ({ page }) => {
