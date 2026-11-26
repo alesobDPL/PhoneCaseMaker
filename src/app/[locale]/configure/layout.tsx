@@ -1,13 +1,19 @@
 import MaxWidthWrapper from '@/components/MaxWidthWrapper'
 import Steps from '@/components/Steps'
-import React, { ReactNode } from 'react'
+import { NextIntlClientProvider } from 'next-intl'
+import { getMessages } from 'next-intl/server'
+import type { ReactNode } from 'react'
 
-const layout = ({children}:{children:ReactNode}) => {
+const layout = async ({ children }: { children: ReactNode }) => {
+  const messages = await getMessages()
+
   return (
-    <MaxWidthWrapper className='flex flex-1 flex-col'>
-        <Steps/>
+    <NextIntlClientProvider messages={{ common: messages.common, configure: messages.configure }}>
+      <MaxWidthWrapper className='flex flex-1 flex-col'>
+        <Steps />
         {children}
-    </MaxWidthWrapper>
+      </MaxWidthWrapper>
+    </NextIntlClientProvider>
   )
 }
 

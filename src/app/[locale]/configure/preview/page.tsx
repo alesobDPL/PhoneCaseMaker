@@ -1,4 +1,5 @@
 import { db } from '@/db'
+import { getCurrencyPreference } from '@/lib/currency-preference'
 import { notFound } from 'next/navigation'
 import DesignPreview from './DesignPreview'
 
@@ -22,7 +23,8 @@ const Page = async ({ searchParams }: PageProps) => {
     return notFound()
   }
 
-  return <DesignPreview configuration={configuration} />
+  const currency = await getCurrencyPreference()
+  return <DesignPreview configuration={configuration} currency={currency} />
 }
 
 export default Page

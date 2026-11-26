@@ -1,13 +1,13 @@
 import { describe, expect, it } from 'vitest'
-import { getUploadErrorMessage, UPLOAD_ERROR_MESSAGES } from '@/lib/upload-errors'
+import { getUploadErrorKey } from '@/lib/upload-errors'
 
-describe('getUploadErrorMessage', () => {
+describe('getUploadErrorKey', () => {
   it.each(['TOO_LARGE', 'FILE_LIMIT_EXCEEDED'])('returns tooLarge for %s', (code) => {
-    expect(getUploadErrorMessage({ code })).toBe(UPLOAD_ERROR_MESSAGES.tooLarge)
+    expect(getUploadErrorKey({ code })).toBe('tooLarge')
   })
 
   it.each(['BAD_REQUEST', 'TOO_SMALL', 'TOO_MANY_FILES'])('returns invalidFile for %s', (code) => {
-    expect(getUploadErrorMessage({ code })).toBe(UPLOAD_ERROR_MESSAGES.invalidFile)
+    expect(getUploadErrorKey({ code })).toBe('invalidFile')
   })
 
   it.each([
@@ -20,6 +20,6 @@ describe('getUploadErrorMessage', () => {
     ['null', null],
     ['undefined', undefined],
   ])('returns generic for %s', (_, error) => {
-    expect(getUploadErrorMessage(error)).toBe(UPLOAD_ERROR_MESSAGES.generic)
+    expect(getUploadErrorKey(error)).toBe('generic')
   })
 })
