@@ -1,20 +1,10 @@
+import enCommon from '../messages/en/common.json'
 import en from '../messages/en/configure.json'
+import esCommon from '../messages/es/common.json'
 import es from '../messages/es/configure.json'
 import { expect, test } from './fixtures'
 
 test.use({ locale: 'en-US' })
-
-test('home shows demo banner with test card when DEMO_MODE', async ({ page }) => {
-  test.skip(process.env.DEMO_MODE !== 'true', 'Requires DEMO_MODE=true')
-  await page.goto('/es')
-
-  const banner = page.getByRole('complementary', { name: 'Demo mode' })
-  await expect(banner).toBeVisible()
-  await expect(banner).toContainText('4242 4242 4242 4242')
-  await expect(banner).toContainText('any future date and any CVC')
-  await expect(banner.getByRole('link', { name: 'Try the admin dashboard' }))
-    .toHaveAttribute('href', '/dashboard')
-})
 
 test.describe('Spanish configurator', () => {
   test.use({ locale: 'es-CL' })
@@ -71,14 +61,38 @@ test('upload page shows an error and resets the dropzone after a failed upload',
   await expect(page.getByText(en.upload.clickToUpload, { exact: true })).toBeVisible()
 })
 
-test('preview without session opens the login modal', async ({ page, configurationId }) => {
-  await page.goto(`/en/configure/preview?id=${configurationId}`)
+const languages = [
+  { locale: 'es', browserLocale: 'es-CL', common: esCommon, configure: es },
+  { locale: 'en', browserLocale: 'en-US', common: enCommon, configure: en },
+]
 
-  await expect(page.getByRole('heading', { name: 'Your iPhone 15' })).toBeVisible()
-  await page.getByRole('button', { name: 'Check out' }).click()
-  const dialog = page.getByRole('dialog', { name: 'Log in to continue' })
-  await expect(dialog).toBeVisible()
-  await expect(dialog).toContainText('Your configuration was saved!')
-  await expect.poll(() => page.evaluate(() => localStorage.getItem('configurationId')))
-    .toBe(configurationId)
-})
+for (const { locale, browserLocale, common, configure } of languages) {
+  test.describe(`${locale} demo banner and login modal`, () => {
+    test.use({ locale: browserLocale })
+
+    test('home shows demo banner with test card when DEMO_MODE', async ({ page }) => {
+      test.skip(process.env.DEMO_MODE !== 'true', 'Requires DEMO_MODE=true')
+      await page.goto(`/${locale}`)
+
+      const banner = page.getByRole('complementary', { name: common.demoBanner.ariaLabel })
+      await expect(banner).toBeVisible()
+      await expect(banner).toContainText(common.demoBanner.message.replace(/<\/?(?:label|card)>/g, ''))
+      await expect(banner.getByRole('link', { name: common.demoBanner.dashboardLink }))
+        .toHaveAttribute('href', `/${locale}/dashboard`)
+    })
+
+    test('preview without session opens the login modal', async ({ page, configurationId }) => {
+      await page.goto(`/${locale}/configure/preview?id=${configurationId}`)
+
+      await expect(page.getByRole('heading', {
+        name: configure.preview.title.replace('{model}', 'iPhone 15'),
+      })).toBeVisible()
+      await page.getByRole('button', { name: configure.preview.checkout }).click()
+      const dialog = page.getByRole('dialog', { name: common.loginModal.title })
+      await expect(dialog).toBeVisible()
+      await expect(dialog).toContainText(common.loginModal.description.replace(/<\/?saved>/g, ''))
+      await expect.poll(() => page.evaluate(() => localStorage.getItem('configurationId')))
+        .toBe(configurationId)
+    })
+  })
+}

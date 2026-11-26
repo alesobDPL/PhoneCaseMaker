@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
-import { HTMLAttributes, HtmlHTMLAttributes } from "react";
+import { useTranslations } from "next-intl";
+import { HTMLAttributes } from "react";
 
 interface PhoneProps extends HTMLAttributes<HTMLDivElement>{
     imgSrc: string
@@ -8,6 +9,8 @@ interface PhoneProps extends HTMLAttributes<HTMLDivElement>{
 
 
 const Phone = ({imgSrc, className, dark = false, ...props}: PhoneProps) => {
+    const t = useTranslations('common.phone');
+
     return(
         <div
             className={cn(
@@ -22,14 +25,14 @@ const Phone = ({imgSrc, className, dark = false, ...props}: PhoneProps) => {
                     : "/phone-template-white-edges.png"
                 }
                 className="pointer-events-none z-50 select-none"
-                alt="phone image"
+                alt={t('templateAlt')}
                 />
 
             <div className="absolute -z-10 inset-0">
                 <img 
                     className="object-cover min-w-full  min-h-full" 
                     src={imgSrc} 
-                    alt="overlaying phone image"
+                    alt={t('overlayAlt')}
                 />
             </div>
         </div>
