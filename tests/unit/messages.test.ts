@@ -10,6 +10,7 @@ const commonKeys = [
   'nav.createCase',
   'nav.openMenu',
   'nav.closeMenu',
+  'dialog.close',
   'locale.label',
   'currency.label',
   'currency.usd',

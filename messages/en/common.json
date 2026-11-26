@@ -55,6 +55,9 @@
       "description": "Review your final design"
     }
   },
+  "dialog": {
+    "close": "Close"
+  },
   "loginModal": {
     "imageAlt": "Snake illustration",
     "title": "Log in to continue",
