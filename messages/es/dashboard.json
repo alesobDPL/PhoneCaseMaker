@@ -1,1 +1,34 @@
-{}
+{
+  "title": "Panel",
+  "description": "Consulta los pedidos pagados y gestiona el estado de sus envíos.",
+  "demo": {
+    "title": "Modo demostración",
+    "description": "Los visitantes pueden ver los pedidos de ejemplo y sus propios pedidos pagados. Solo pueden actualizar sus propios pedidos. Los pedidos de ejemplo son de solo lectura para todos."
+  },
+  "revenue": {
+    "label": "Ingresos",
+    "last7Days": "Ingresos · últimos 7 días",
+    "last30Days": "Ingresos · últimos 30 días",
+    "noSales": "Sin ventas"
+  },
+  "paidOrdersByStatus": "Pedidos pagados por estado",
+  "orders": {
+    "title": "Pedidos pagados",
+    "columns": {
+      "date": "Fecha",
+      "customer": "Cliente",
+      "model": "Modelo",
+      "total": "Total",
+      "status": "Estado"
+    },
+    "sampleReadOnly": "Ejemplo · solo lectura",
+    "customCase": "Funda personalizada",
+    "empty": "Todavía no hay pedidos pagados."
+  },
+  "statusSelect": {
+    "label": "Estado del pedido",
+    "save": "Guardar",
+    "saving": "Guardando…",
+    "error": "No pudimos actualizar el pedido. Inténtalo de nuevo."
+  }
+}

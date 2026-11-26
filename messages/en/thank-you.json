@@ -1,1 +1,14 @@
-{}
+{
+  "title": "Thank you for your order",
+  "payment": {
+    "pending": "Confirming your payment…",
+    "error": "Unable to confirm your payment. Please refresh this page.",
+    "confirmed": "Your payment is confirmed."
+  },
+  "orderNumber": "Order {id}",
+  "modelTitle": "Your {model}",
+  "material": "Material",
+  "finish": "Finish",
+  "total": "Total",
+  "shippingAddress": "Shipping address"
+}

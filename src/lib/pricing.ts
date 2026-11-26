@@ -13,9 +13,3 @@ export function calculatePrice(
 
   return { amount, currency }
 }
-
-export function calculatePriceCents(
-  configuration: Pick<Configuration, 'material' | 'finish'>,
-): number {
-  return calculatePrice(configuration, 'usd').amount
-}

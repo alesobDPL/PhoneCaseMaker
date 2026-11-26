@@ -21,7 +21,3 @@ export const PRICE_LIST: Record<Currency, {
     finish: { smooth: 0, textured: 2_990 },
   },
 }
-
-const { base, material, finish } = PRICE_LIST.usd
-export const BASE_PRICE = base
-export const PRODUCT_PRICES = { material, finish } as const
