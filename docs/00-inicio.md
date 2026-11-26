@@ -10,11 +10,11 @@ Configurador de fundas personalizadas: el usuario sube una imagen, la ajusta sob
 - **Último avance:** la demo en producción funciona de punta a punta: subida de imágenes (se corrigió una variable de entorno mal formada), login con Kinde (callbacks de producción agregados) y compra de prueba con Stripe. El webhook marca el pedido como pagado una sola vez.
 - **Bloqueos:** ninguno. E6 (el webhook guarda la dirección de envío de `collected_information.shipping_details`) está en `main`, desplegado y verificado en producción con una segunda compra de prueba (2026-11-25): el pedido quedó pagado con dirección de envío y de facturación.
 - **Siguiente paso:**
-  1. Lote 2 (F portada y comunes, G resumen y panel, H pruebas y capturas): Opus redacta los encargos (e13 a e15); Sonnet los comprueba y los lanza en paralelo. Al cerrarlo: revisión final de la rama por Opus, prueba de compra real y merge a `main` con el sí del propietario.
+  1. Lote 2 (F portada y comunes, G resumen y panel, H pruebas y capturas): Opus redacta los encargos (e13 a e15; si el subagente ya terminó, los borradores están en `docs/privado/encargos/`); Sonnet los comprueba y los lanza en paralelo. Al cerrarlo: revisión final de la rama por Opus, prueba de compra real y merge a `main` con el sí del propietario.
   2. Lotes 0 y 1 cerrados: E8 y E9, y E10 (f52b08e), E11 (9ad3c48) y E12 (a3408f8), integrados en `feat/f6-f8-idiomas-pedidos-moneda`; unit 81, integración 44 y e2e 18/18.
   3. E7 `onUploadError` integrado en `main` (2026-11-25, sin push ni despliegue). Pendiente, con el sí del propietario: limpiar su worktree y rama, y publicarlo.
   4. El enlace al tutorial del README **no se pondrá** (decisión del propietario).
-- **Última bitácora:** `privado/bitacora/2026-11-25-1606-webhook-subida-compra-prueba.md` (privada).
+- **Última bitácora:** `privado/bitacora/2026-11-25-2230-f6-f8-lotes-0-y-1.md` (privada).
 
 | Encargo | Lote | Estado | Siguiente paso |
 | --- | --- | --- | --- |
