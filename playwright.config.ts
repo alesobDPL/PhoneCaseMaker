@@ -16,15 +16,23 @@ export default defineConfig({
     trace: 'retain-on-failure',
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
-  webServer: {
-    command: 'npm run build && npm run start -- --port 3100',
-    port: 3100,
-    timeout: 180_000,
-    env: {
-      NEXT_PUBLIC_SERVER_URL: 'http://localhost:3100',
-      KINDE_SITE_URL: 'http://localhost:3100',
-      KINDE_POST_LOGIN_REDIRECT_URL: 'http://localhost:3100/auth-callback',
-      KINDE_POST_LOGOUT_REDIRECT_URL: 'http://localhost:3100',
+  webServer: [
+    {
+      command: 'node e2e/jwks-server.mjs',
+      url: 'http://127.0.0.1:3199/.well-known/jwks.json',
+      reuseExistingServer: !process.env.CI,
     },
-  },
+    {
+      command: 'npm run build && npm run start -- --port 3100',
+      port: 3100,
+      timeout: 180_000,
+      env: {
+        NEXT_PUBLIC_SERVER_URL: 'http://localhost:3100',
+        KINDE_SITE_URL: 'http://localhost:3100',
+        KINDE_POST_LOGIN_REDIRECT_URL: 'http://localhost:3100/auth-callback',
+        KINDE_POST_LOGOUT_REDIRECT_URL: 'http://localhost:3100',
+        KINDE_ISSUER_URL: 'http://127.0.0.1:3199',
+      },
+    },
+  ],
 })
