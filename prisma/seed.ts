@@ -1,5 +1,6 @@
 import { PrismaClient, type OrderStatus } from '@prisma/client'
-import { calculatePriceCents } from '../src/lib/pricing'
+import { CURRENCIES } from '../src/config/currencies'
+import { calculatePrice } from '../src/lib/pricing'
 
 const prisma = new PrismaClient()
 
@@ -42,11 +43,13 @@ async function main() {
     const now = Date.now()
     for (const [index, age] of agesInDays.entries()) {
       const configuration = configurations[index % configurations.length]
+      const currency = CURRENCIES[index % CURRENCIES.length]
       await tx.order.create({
         data: {
           userId: users[index % users.length].id,
           configurationId: configuration.id,
-          amountCents: calculatePriceCents(configuration),
+          amountCents: calculatePrice(configuration, currency).amount,
+          currency,
           isPaid: true,
           isSample: true,
           Status: statuses[index % statuses.length],
@@ -60,7 +63,7 @@ async function main() {
     maxWait: 10_000,
     timeout: 30_000,
   })
-  console.log('Seeded 8 paid sample orders for 3 example users.')
+  console.log('Seeded 8 paid sample orders in USD, EUR and CLP for 3 example users.')
 }
 
 main()
