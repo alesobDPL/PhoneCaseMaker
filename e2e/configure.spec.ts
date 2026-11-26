@@ -3,7 +3,7 @@ import { expect, test } from './fixtures'
 
 test('home shows demo banner with test card when DEMO_MODE', async ({ page }) => {
   test.skip(process.env.DEMO_MODE !== 'true', 'Requires DEMO_MODE=true')
-  await page.goto('/')
+  await page.goto('/es')
 
   const banner = page.getByRole('complementary', { name: 'Demo mode' })
   await expect(banner).toBeVisible()
@@ -14,7 +14,7 @@ test('home shows demo banner with test card when DEMO_MODE', async ({ page }) =>
 })
 
 test('upload page renders the dropzone', async ({ page }) => {
-  await page.goto('/configure/upload')
+  await page.goto('/es/configure/upload')
 
   await expect(page.getByText('Click to upload')).toBeVisible()
   await expect(page.getByText('or drag and drop')).toBeVisible()
@@ -30,7 +30,7 @@ test('upload page shows an error and resets the dropzone after a failed upload',
     }
   })
 
-  await page.goto('/configure/upload')
+  await page.goto('/es/configure/upload')
   await page.locator('input[type="file"]').setInputFiles({
     name: 'image.png',
     mimeType: 'image/png',
@@ -45,7 +45,7 @@ test('upload page shows an error and resets the dropzone after a failed upload',
 })
 
 test('preview without session opens the login modal', async ({ page, configurationId }) => {
-  await page.goto(`/configure/preview?id=${configurationId}`)
+  await page.goto(`/es/configure/preview?id=${configurationId}`)
 
   await expect(page.getByRole('heading', { name: 'Your iPhone 15' })).toBeVisible()
   await page.getByRole('button', { name: 'Check out' }).click()

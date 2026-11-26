@@ -20,7 +20,7 @@ import { useToast } from "@/hooks/use-toast"
 import { useMutation } from "@tanstack/react-query"
 import { saveConfig as _saveConfig,
      SaveConfigArgs } from "./actions"
-import { useRouter } from "next/navigation"
+import { useRouter } from "@/i18n/navigation"
 
 interface DesignConfiguratorProps {
   configId: string

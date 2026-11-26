@@ -1,0 +1,38 @@
+{
+  "nav": {
+    "brand": "case<accent>Maker</accent>",
+    "orders": "Mis pedidos",
+    "dashboard": "Dashboard",
+    "signIn": "Iniciar sesión",
+    "signUp": "Registrarse",
+    "signOut": "Cerrar sesión",
+    "createCase": "Crear funda",
+    "menu": "Menú",
+    "openMenu": "Abrir menú",
+    "closeMenu": "Cerrar menú"
+  },
+  "locale": {
+    "label": "Idioma",
+    "changeAria": "Cambiar idioma, actual: {current}",
+    "es": "Español",
+    "en": "English",
+    "esCode": "ES",
+    "enCode": "EN"
+  },
+  "currency": {
+    "label": "Moneda",
+    "changeAria": "Cambiar moneda, actual: {code}",
+    "usd": "Dólar estadounidense",
+    "eur": "Euro",
+    "clp": "Peso chileno"
+  },
+  "notFound": {
+    "title": "Página no encontrada",
+    "description": "La página que buscas no está disponible.",
+    "backHome": "Volver al inicio"
+  },
+  "meta": {
+    "title": "caseMaker",
+    "description": "Crea una funda personalizada con tu imagen."
+  }
+}

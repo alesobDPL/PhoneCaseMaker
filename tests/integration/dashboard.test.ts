@@ -2,8 +2,8 @@ import { mockKindeUser } from '../helpers/auth'
 import { afterAll, afterEach, beforeEach, expect, it, vi } from 'vitest'
 import { createOrder, createUser, resetDb } from '../helpers/db'
 import { db } from '@/db'
-import { getDashboardData } from '@/app/dashboard/queries'
-import { updateOrderStatus } from '@/app/dashboard/actions'
+import { getDashboardData } from '@/app/[locale]/dashboard/queries'
+import { updateOrderStatus } from '@/app/[locale]/dashboard/actions'
 import type { AuthzEnv } from '@/lib/authz'
 
 vi.mock('next/cache', () => ({ revalidatePath: vi.fn() }))

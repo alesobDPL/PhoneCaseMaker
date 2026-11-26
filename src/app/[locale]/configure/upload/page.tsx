@@ -6,7 +6,7 @@ import { getUploadErrorMessage, UPLOAD_ERROR_MESSAGES } from '@/lib/upload-error
 import { useUploadThing } from '@/lib/uploadthing'
 import { cn } from '@/lib/utils'
 import { Image, Loader2, MousePointerSquareDashed } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from '@/i18n/navigation'
 import React, { useState, useTransition } from 'react'
 import Dropzone from 'react-dropzone'
 
