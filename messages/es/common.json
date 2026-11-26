@@ -34,5 +34,45 @@
   "meta": {
     "title": "caseMaker",
     "description": "Crea una funda personalizada con tu imagen."
+  },
+  "footer": {
+    "copyright": "© {year} Todos los derechos reservados",
+    "terms": "Términos",
+    "privacy": "Privacidad",
+    "cookies": "Política de cookies"
+  },
+  "steps": {
+    "upload": {
+      "name": "Paso {number}: Añadir imagen",
+      "description": "Elige una imagen para tu funda"
+    },
+    "design": {
+      "name": "Paso {number}: Personalizar diseño",
+      "description": "Personaliza tu funda"
+    },
+    "preview": {
+      "name": "Paso {number}: Resumen",
+      "description": "Revisa tu diseño final"
+    }
+  },
+  "loginModal": {
+    "imageAlt": "Ilustración de una serpiente",
+    "title": "Inicia sesión para continuar",
+    "description": "<saved>Guardamos tu configuración.</saved> Inicia sesión o crea una cuenta para completar tu compra.",
+    "login": "Iniciar sesión",
+    "register": "Registrarse"
+  },
+  "demoBanner": {
+    "ariaLabel": "Modo demostración",
+    "message": "<label>Modo demostración.</label> Esta es una demo. Usa la tarjeta de prueba <card>4242 4242 4242 4242</card> con cualquier fecha futura y cualquier CVC.",
+    "dashboardLink": "Prueba el panel de administración"
+  },
+  "phone": {
+    "templateAlt": "Plantilla del teléfono",
+    "overlayAlt": "Imagen sobre la funda del teléfono"
+  },
+  "authCallback": {
+    "title": "Iniciando sesión...",
+    "description": "Te redirigiremos automáticamente"
   }
 }

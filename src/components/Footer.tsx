@@ -1,8 +1,11 @@
 import React from 'react'
 import MaxWidthWrapper from './MaxWidthWrapper'
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 
 const Footer = () => {
+  const t = useTranslations('common.footer')
+
   return (
     <footer className='bg-white h-20 relative'>
         <MaxWidthWrapper>
@@ -12,7 +15,7 @@ const Footer = () => {
             md:justify-between justify-center items-center'>
                 <div className='text-center md:tex-left pb-2 md:pb-0'>
                     <p className='text-sm text-muted-foreground'>
-                        &copy; {new Date().getFullYear()} All rights reserved
+                        {t('copyright', { year: new Date().getFullYear() })}
                     </p>
                 </div>
 
@@ -22,19 +25,19 @@ const Footer = () => {
                         href={"#"} 
                         className='text-sm text-muted-foreground
                         hover:text-gray-600'>
-                        Terms
+                        {t('terms')}
                         </Link>
                         <Link 
                         href={"#"} 
                         className='text-sm text-muted-foreground
                         hover:text-gray-600'>
-                        Privacy Policy
+                        {t('privacy')}
                         </Link>
                         <Link 
                         href={"#"} 
                         className='text-sm text-muted-foreground
                         hover:text-gray-600'>
-                        Cookie policy
+                        {t('cookies')}
                         </Link>
                     </div>
                 </div>

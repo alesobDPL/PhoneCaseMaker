@@ -1,1 +1,33 @@
-{}
+{
+  "hero": {
+    "title": "Tu foto en una funda <accent>a medida</accent>",
+    "description": "Lleva tus recuerdos favoritos en una funda <emphasis>única</emphasis>. Con CaseMaker proteges tu teléfono y llevas contigo los recuerdos que más te importan.",
+    "durableMaterial": "Material resistente de alta calidad.",
+    "printGuarantee": "Garantía de impresión de 5 años.",
+    "supportedModels": "Compatible con modelos recientes de iPhone.",
+    "happyCustomers": "<count>1.250</count> clientes satisfechos",
+    "customerPhotoAlt": "Foto de cliente"
+  },
+  "testimonials": {
+    "title": "Lo que dicen nuestros <accent>clientes</accent>",
+    "verifiedPurchase": "Compra verificada",
+    "photoAlt": "Foto de {name}",
+    "jonathan": {
+      "name": "Jonathan",
+      "quote": "«La funda se siente resistente e incluso me elogiaron el diseño. Ya llevo dos meses y medio usándola y <accent>la imagen sigue muy nítida</accent>. Con mi funda anterior, la imagen empezó a ponerse amarilla a las pocas semanas. Me encanta.»"
+    },
+    "josh": {
+      "name": "Josh",
+      "quote": "«Suelo llevar el teléfono y las llaves juntos en el bolsillo, así que todas mis fundas anteriores acabaron llenas de rayones. Salvo un rayón casi imperceptible en una esquina, esta <accent>parece nueva después de unos seis meses</accent>. Me gusta mucho.»"
+    }
+  },
+  "createCase": {
+    "title": "Sube tu foto y consigue <accent>tu propia funda</accent>",
+    "examplePhotoAlt": "Foto de un caballo",
+    "silicone": "Silicona de alta calidad",
+    "coating": "Recubrimiento resistente a rayones y huellas",
+    "wirelessCharging": "Compatible con carga inalámbrica",
+    "printWarranty": "Garantía de impresión de 5 años",
+    "action": "Crea tu funda ahora"
+  }
+}

@@ -1,1 +1,33 @@
-{}
+{
+  "hero": {
+    "title": "Your Image on a <accent>Custom</accent> Phone Case",
+    "description": "Capture your favorite memories with your own <emphasis>one-of-a-kind</emphasis> phone case. CaseMaker lets you protect your memories, not just your phone.",
+    "durableMaterial": "High-quality, durable material.",
+    "printGuarantee": "5-year print guarantee.",
+    "supportedModels": "Modern iPhone models supported.",
+    "happyCustomers": "<count>1,250</count> Happy customers",
+    "customerPhotoAlt": "Customer photo"
+  },
+  "testimonials": {
+    "title": "What our <accent>customers</accent> say",
+    "verifiedPurchase": "Verified Purchase",
+    "photoAlt": "Photo of {name}",
+    "jonathan": {
+      "name": "Jonathan",
+      "quote": "“The case feels durable and I even got a compliment on the design. I've had the case for two and a half months now and <accent>the image is super clear</accent>. On the case I had before, the image started turning yellow after a couple of weeks. Love it.”"
+    },
+    "josh": {
+      "name": "Josh",
+      "quote": "“I usually keep my phone and keys together in my pocket, so all my previous cases got pretty scratched up. Aside from a barely noticeable scratch on the corner, this one <accent>looks brand new after about half a year</accent>. I dig it.”"
+    }
+  },
+  "createCase": {
+    "title": "Upload your photo and get <accent>your own case</accent> now",
+    "examplePhotoAlt": "Photo of a horse",
+    "silicone": "High-quality silicone material",
+    "coating": "Scratch and fingerprint resistant coating",
+    "wirelessCharging": "Wireless charging compatible",
+    "printWarranty": "5-year print warranty",
+    "action": "Create your case now"
+  }
+}
