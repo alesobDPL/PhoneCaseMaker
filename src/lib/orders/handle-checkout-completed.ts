@@ -29,20 +29,29 @@ function addressData(address: Stripe.Address, name: string | null) {
 export async function handleCheckoutCompleted(
   session: Stripe.Checkout.Session,
   db: PrismaClient,
-): Promise<'paid' | 'already_processed' | 'ignored'> {
+): Promise<'paid' | 'already_processed' | 'ignored' | 'mismatch'> {
   const { orderId, userId } = session.metadata ?? {}
   if (!orderId || !userId) return 'ignored'
 
   return db.$transaction(async (tx) => {
+    const order = await tx.order.findUnique({
+      where: { id: orderId },
+      select: { isPaid: true, amountCents: true, currency: true },
+    })
+    if (!order) return 'ignored'
+    if (order.isPaid) return 'already_processed'
+    if (session.amount_total !== order.amountCents || session.currency !== order.currency) return 'mismatch'
+
     // Only the transaction that changes isPaid can create addresses.
     const { count } = await tx.order.updateMany({
-      where: { id: orderId, isPaid: false },
+      where: { id: orderId, isPaid: false, amountCents: order.amountCents, currency: order.currency },
       data: { isPaid: true },
     })
 
     if (count === 0) {
-      const order = await tx.order.findUnique({ where: { id: orderId }, select: { id: true } })
-      return order ? 'already_processed' : 'ignored'
+      const currentOrder = await tx.order.findUnique({ where: { id: orderId }, select: { isPaid: true } })
+      if (!currentOrder) return 'ignored'
+      return currentOrder.isPaid ? 'already_processed' : 'mismatch'
     }
 
     const shipping = getShippingDetails(session)

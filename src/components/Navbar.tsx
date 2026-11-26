@@ -2,18 +2,27 @@ import { LoginLink, LogoutLink, RegisterLink } from '@kinde-oss/kinde-auth-nextj
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
 import { ArrowRight, Sparkles } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
+import { CurrencySwitcher } from '@/components/CurrencySwitcher'
 import LocaleSwitcher from '@/components/LocaleSwitcher'
 import MaxWidthWrapper from '@/components/MaxWidthWrapper'
 import MobileNav, { NavLink } from '@/components/MobileNav'
 import { buttonVariants } from '@/components/ui/button'
+import { CURRENCY_CONFIG } from '@/config/currencies'
 import { getAuthzEnv, isAdmin } from '@/lib/authz'
+import { getCurrencyPreference } from '@/lib/currency-preference'
 import { cn } from '@/lib/utils'
 
 export default async function Navbar() {
-  const [user, t] = await Promise.all([
+  const [user, t, current, tCurrency] = await Promise.all([
     getKindeServerSession().getUser(),
     getTranslations('common.nav'),
+    getCurrencyPreference(),
+    getTranslations('common.currency'),
   ])
+  const labels = {
+    trigger: tCurrency('changeAria', { code: CURRENCY_CONFIG[current].code }),
+    names: { usd: tCurrency('usd'), eur: tCurrency('eur'), clp: tCurrency('clp') },
+  }
   const isSignedIn = Boolean(user)
   const showDashboard = isAdmin(user, getAuthzEnv())
   const link = cn(buttonVariants({ size: 'sm', variant: 'ghost' }),
@@ -46,7 +55,7 @@ export default async function Navbar() {
               </>
             )}
             <LocaleSwitcher />
-            {/* Currency switcher slot */}
+            <CurrencySwitcher current={current} labels={labels} />
             <NavLink
               href="/configure/upload"
               className={cn(buttonVariants({ size: 'sm' }), 'gap-1 duration-150 focus-visible:ring-2')}
@@ -55,7 +64,11 @@ export default async function Navbar() {
               <ArrowRight aria-hidden="true" className="size-4" />
             </NavLink>
           </div>
-          <MobileNav isSignedIn={isSignedIn} isAdmin={showDashboard} />
+          <MobileNav
+            isSignedIn={isSignedIn}
+            isAdmin={showDashboard}
+            currencySlot={<CurrencySwitcher variant="segmented" current={current} labels={labels} />}
+          />
         </nav>
       </MaxWidthWrapper>
     </header>
