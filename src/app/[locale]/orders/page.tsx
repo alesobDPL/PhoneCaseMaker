@@ -1,5 +1,5 @@
 import { LoginLink } from '@kinde-oss/kinde-auth-nextjs/components'
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
+import { getSessionUser } from '@/lib/auth/session'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { EmptyState } from '@/components/orders/EmptyState'
 import { OrderCard } from '@/components/orders/OrderCard'
@@ -11,7 +11,7 @@ import { cn } from '@/lib/utils'
 export default async function OrdersPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
   setRequestLocale(locale)
-  const [user, t] = await Promise.all([getKindeServerSession().getUser(), getTranslations('orders')])
+  const [user, t] = await Promise.all([getSessionUser(), getTranslations('orders')])
   const actionClassName = cn(buttonVariants(), 'min-h-touch min-w-touch duration-150 focus-visible:ring-2')
 
   if (!user) {

@@ -2,7 +2,7 @@
 
 import { db } from '@/db'
 import { canUpdateOrder, canViewDashboard, getAuthzEnv, isAdmin } from '@/lib/authz'
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
+import { getSessionUser } from '@/lib/auth/session'
 import { OrderStatus } from '@prisma/client'
 import { revalidatePath } from 'next/cache'
 
@@ -10,7 +10,7 @@ export async function updateOrderStatus({ orderId, status }: {
   orderId: string
   status: OrderStatus
 }): Promise<void> {
-  const user = await getKindeServerSession().getUser()
+  const user = await getSessionUser()
   const env = getAuthzEnv()
   if (!user || !canViewDashboard(user, env)) throw new Error('Unauthorized')
   if (!Object.values(OrderStatus).includes(status)) throw new Error('Invalid order status')

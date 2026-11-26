@@ -1,6 +1,6 @@
 'use server'
 
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
+import { getSessionUser } from '@/lib/auth/session'
 import { PRICE_LIST } from '@/config/products'
 import { db } from '@/db'
 import { routing, type AppLocale } from '@/i18n/routing'
@@ -14,7 +14,7 @@ export async function createCheckoutSession({
   configId,
   locale: requestedLocale,
 }: { configId: string; locale: string }): Promise<{ url: string } | { error: CheckoutErrorCode }> {
-  const user = await getKindeServerSession().getUser()
+  const user = await getSessionUser()
   if (!user) return { error: 'unauthenticated' }
 
   const configuration = await db.configuration.findUnique({ where: { id: configId } })

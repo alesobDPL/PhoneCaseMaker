@@ -4,7 +4,7 @@ import { CURRENCIES, DEFAULT_CURRENCY, isCurrency } from '@/config/currencies'
 import { canViewDashboard, getAuthzEnv } from '@/lib/authz'
 import { formatMoney } from '@/lib/money'
 import { MODELS } from '@/validators/option-validators'
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
+import { getSessionUser } from '@/lib/auth/session'
 import type { OrderStatus } from '@prisma/client'
 import { getFormatter, getLocale, getTranslations } from 'next-intl/server'
 import { notFound } from 'next/navigation'
@@ -12,7 +12,7 @@ import { getDashboardData } from './queries'
 import StatusSelect from './StatusSelect'
 
 export default async function DashboardPage() {
-  const user = await getKindeServerSession().getUser()
+  const user = await getSessionUser()
   const env = getAuthzEnv()
   if (!user || !canViewDashboard(user, env)) notFound()
 

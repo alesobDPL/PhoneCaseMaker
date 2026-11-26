@@ -1,5 +1,5 @@
 import { LoginLink, LogoutLink, RegisterLink } from '@kinde-oss/kinde-auth-nextjs/components'
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
+import { getSessionUser } from '@/lib/auth/session'
 import { ArrowRight, Sparkles } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 import { CurrencySwitcher } from '@/components/CurrencySwitcher'
@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils'
 
 export default async function Navbar() {
   const [user, t, current, tCurrency] = await Promise.all([
-    getKindeServerSession().getUser(),
+    getSessionUser(),
     getTranslations('common.nav'),
     getCurrencyPreference(),
     getTranslations('common.currency'),
