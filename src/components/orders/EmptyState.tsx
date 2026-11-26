@@ -1,6 +1,5 @@
 import { Package } from 'lucide-react'
 import type { ReactElement } from 'react'
-import { Button } from '@/components/ui/button'
 
 type EmptyStateProps = {
   title: string
@@ -19,9 +18,7 @@ export function EmptyState({ title, description, action, 'data-testid': testId }
         <h2 className="text-lg font-semibold">{title}</h2>
         <p className="text-muted-foreground">{description}</p>
       </div>
-      <Button asChild className="min-h-touch min-w-touch duration-150 focus-visible:ring-2">
-        {action}
-      </Button>
+      {action}
     </div>
   )
 }

@@ -3,13 +3,16 @@ import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { EmptyState } from '@/components/orders/EmptyState'
 import { OrderCard } from '@/components/orders/OrderCard'
+import { buttonVariants } from '@/components/ui/button'
 import { Link } from '@/i18n/navigation'
 import { getUserOrders } from '@/lib/orders/get-user-orders'
+import { cn } from '@/lib/utils'
 
 export default async function OrdersPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params
   setRequestLocale(locale)
   const [user, t] = await Promise.all([getKindeServerSession().getUser(), getTranslations('orders')])
+  const actionClassName = cn(buttonVariants(), 'min-h-touch min-w-touch duration-150 focus-visible:ring-2')
 
   if (!user) {
     return (
@@ -18,7 +21,10 @@ export default async function OrdersPage({ params }: { params: Promise<{ locale:
         title={t('signedOut.title')}
         description={t('signedOut.description')}
         action={(
-          <LoginLink postLoginRedirectURL={`${process.env.NEXT_PUBLIC_SERVER_URL}/${locale}/orders`}>
+          <LoginLink
+            className={actionClassName}
+            postLoginRedirectURL={`${process.env.NEXT_PUBLIC_SERVER_URL}/${locale}/orders`}
+          >
             {t('signedOut.signIn')}
           </LoginLink>
         )}
@@ -34,7 +40,11 @@ export default async function OrdersPage({ params }: { params: Promise<{ locale:
         data-testid="orders-empty"
         title={t('empty.title')}
         description={t('empty.description')}
-        action={<Link href="/configure/upload">{t('empty.createCase')}</Link>}
+        action={(
+          <Link className={actionClassName} href="/configure/upload">
+            {t('empty.createCase')}
+          </Link>
+        )}
       />
     )
   }
