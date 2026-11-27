@@ -4,14 +4,14 @@ Configurador de fundas personalizadas: el usuario sube una imagen, la ajusta sob
 
 ## Estado actual · actualizado 2026-11-27
 
-- **Fase:** revisión (F6–F8: lotes 0 a 4 integrados; falta el cierre con el propietario)
+- **Fase:** despliegue (F6–F8 integrado en `main` el 2026-11-27, merge 1d69aa9, sin push; falta la migración en producción)
 - **Funcionalidad activa:** F6 Idiomas ES/EN, F7 "Mis pedidos" y F8 Multimoneda, juntas: [spec](superpowers/specs/2026-11-25-idiomas-pedidos-multimoneda-design.md) **Aprobado** el 2026-11-25; [plan](superpowers/plans/2026-11-25-idiomas-pedidos-multimoneda.md) **Aprobado** el 2026-11-25 (rama `feat/f6-f8-idiomas-pedidos-moneda`, punta 4b39a6a; [ADR-001](decisiones/ADR-001-idiomas-next-intl-prefijo-url.md), [ADR-002](decisiones/ADR-002-multimoneda-lista-fija-unidad-menor.md) y [ADR-003](decisiones/ADR-003-verificacion-de-sesion.md) aprobados). F5 Despliegue terminada (en `main`, verificada en producción el 2026-11-25).
 - **Lote en curso:** 4 integrado (E19 aceptado el 2026-11-27, merge 4b39a6a en `f6-f8-base`). Pruebas del conjunto: typecheck, lint (2 advertencias previas), unit 99, integración 45 y e2e 39 (2 `fixme` del estado de error de Mis pedidos).
 - **Último avance:** H3 (Reintentar de Mis pedidos no recuperaba la página) corregido con E19 e integrado. Antes: login real con Kinde y subida con UploadThing verificados en local; `ADMIN_EMAIL` quitado de producción.
 - **Bloqueos:** ninguno. Nota: con `next start` en local UploadThing falla (no alcanza localhost); usar `next dev`.
 - **Siguiente paso:**
   1. Revisión cerrada: Lighthouse (Mis pedidos 96), teclado, estado de error y H3 corregido (`privado/fases-y-pruebas/`).
-  2. Compra de prueba (Stripe sandbox, tarjeta de prueba) hecha el 2026-11-27 en local, en EUR (13,00 €) y en CLP ($13.990): precio en vista previa, cobro en la moneda elegida, pedido en Mis pedidos y confirmación correctas. El webhook se reprodujo localmente firmado (no hay Stripe CLI), no es la entrega real de Stripe. Pendiente, con el sí del propietario: migración aditiva al desplegar y merge a `main`.
+  2. Compra de prueba (Stripe sandbox, tarjeta de prueba) hecha el 2026-11-27 en local, en EUR (13,00 €) y en CLP ($13.990): precio en vista previa, cobro en la moneda elegida, pedido en Mis pedidos y confirmación correctas. El webhook se reprodujo localmente firmado (no hay Stripe CLI), no es la entrega real de Stripe. Merge a `main` hecho (1d69aa9). Pendiente: aplicar la migración aditiva `20261125120000_order_currency` en producción (único pendiente según `migrate status`; el permiso de la sesión lo bloqueó, la aplica el propietario o se autoriza), y después push y despliegue con su sí.
   3. Después del merge, como encargos aparte: R2 (sesión de Stripe antigua tras cambiar de moneda; migración aditiva y ADR) y R6 (SEO: `hreflang`, `x-default`, `metadataBase`).
   4. E7 `onuploaderror` integrado en `main` (2026-11-25, sin push ni despliegue). Pendiente, con el sí del propietario: limpiar worktrees y ramas de E7 a E18 (quitar antes el enlace `node_modules` de cada worktree) y publicar E7.
   5. El enlace al tutorial del README **no se pondrá** (decisión del propietario).
