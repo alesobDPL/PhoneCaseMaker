@@ -11,7 +11,7 @@ Configurador de fundas personalizadas: el usuario sube una imagen, la ajusta sob
 - **Bloqueos:** ninguno. Nota: con `next start` en local UploadThing falla (no alcanza localhost); usar `next dev`.
 - **Siguiente paso:**
   1. Revisión cerrada: Lighthouse (Mis pedidos 96), teclado, estado de error y H3 corregido (`privado/fases-y-pruebas/`).
-  2. Con el propietario: compra real de prueba en EUR y CLP, migración aditiva al desplegar, y merge a `main` con su sí.
+  2. Compra de prueba (Stripe sandbox, tarjeta de prueba) hecha el 2026-11-27 en local, en EUR (13,00 €) y en CLP ($13.990): precio en vista previa, cobro en la moneda elegida, pedido en Mis pedidos y confirmación correctas. El webhook se reprodujo localmente firmado (no hay Stripe CLI), no es la entrega real de Stripe. Pendiente, con el sí del propietario: migración aditiva al desplegar y merge a `main`.
   3. Después del merge, como encargos aparte: R2 (sesión de Stripe antigua tras cambiar de moneda; migración aditiva y ADR) y R6 (SEO: `hreflang`, `x-default`, `metadataBase`).
   4. E7 `onuploaderror` integrado en `main` (2026-11-25, sin push ni despliegue). Pendiente, con el sí del propietario: limpiar worktrees y ramas de E7 a E18 (quitar antes el enlace `node_modules` de cada worktree) y publicar E7.
   5. El enlace al tutorial del README **no se pondrá** (decisión del propietario).
