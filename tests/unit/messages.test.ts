@@ -16,6 +16,9 @@ const commonKeys = [
   'currency.usd',
   'currency.eur',
   'currency.clp',
+  'authCallback.errorTitle',
+  'authCallback.errorDescription',
+  'authCallback.retry',
 ]
 
 function flatten(messages: Messages, prefix = ''): Record<string, string> {

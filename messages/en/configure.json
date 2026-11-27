@@ -80,6 +80,9 @@
     "chargedIn": "You will be charged in {currency}",
     "checkout": "Check out"
   },
+  "checkout": {
+    "productName": "Custom iPhone Case"
+  },
   "checkoutErrors": {
     "not_found": {
       "title": "Configuration not found",

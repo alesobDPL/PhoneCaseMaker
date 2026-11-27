@@ -1,11 +1,14 @@
 "use client"
 
+import { LoginLink } from "@kinde-oss/kinde-auth-nextjs/components"
 import { useQuery } from "@tanstack/react-query"
 import { useEffect, useState } from "react"
 import { getAuthStatus } from "./Actions"
 import { useRouter } from "@/i18n/navigation"
 import { Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"
+import { buttonVariants } from "@/components/ui/button"
+import { cn } from "@/lib/utils"
 
 const Page = () => {
   const t = useTranslations('common.authCallback')
@@ -18,15 +21,18 @@ const Page = () => {
     if (configurationId) setConfigId(configurationId)
   }, [])
 
-  const { data } = useQuery({
+  const { data, isError } = useQuery({
     queryKey: ["auth.callback"],
     queryFn: async () => await getAuthStatus(),
-    retry: true,
+    retry: 3,
     retryDelay: 500,
+    retryOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   })
 
   useEffect(() => {
-    if (data?.success) {
+    if (!isError && data?.success) {
       if (configId) {
         localStorage.removeItem("configurationId")
         router.push(`/configure/preview?id=${configId}`)
@@ -34,7 +40,21 @@ const Page = () => {
         router.push("/")
       }
     }
-  }, [data, configId, router]) // Only run effect when data or configId changes
+  }, [data, isError, configId, router])
+
+  if (isError) {
+    return (
+      <div className="w-full mt-24 flex justify-center px-4">
+        <div role="alert" className="flex flex-col items-center gap-2 text-center">
+          <h3 className="font-semibold text-xl">{t('errorTitle')}</h3>
+          <p>{t('errorDescription')}</p>
+          <LoginLink className={cn(buttonVariants(), 'min-h-touch min-w-touch duration-150 focus-visible:ring-2')}>
+            {t('retry')}
+          </LoginLink>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="w-full mt-24 flex justify-center">

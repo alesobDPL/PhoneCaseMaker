@@ -76,6 +76,9 @@
   },
   "authCallback": {
     "title": "Iniciando sesión...",
-    "description": "Te redirigiremos automáticamente"
+    "description": "Te redirigiremos automáticamente",
+    "errorTitle": "No se pudo iniciar sesión",
+    "errorDescription": "Vuelve a iniciar sesión para continuar.",
+    "retry": "Volver a iniciar sesión"
   }
 }
