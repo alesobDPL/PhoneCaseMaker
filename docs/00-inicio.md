@@ -11,7 +11,7 @@ Configurador de fundas personalizadas: el usuario sube una imagen, la ajusta sob
 - **Bloqueos:** ninguno. Nota: con `next start` en local UploadThing falla (no alcanza localhost); usar `next dev`.
 - **Siguiente paso:**
   1. Opcional: compra de prueba en producción solo con el sí del propietario y claves de prueba; hoy el webhook real de Stripe en producción no se ha ejercitado con F6–F8.
-  2. Encargos `listo`, sin lanzar: E20 (R2: un pedido no cambia de moneda ni monto; sin migración; requiere aprobar [ADR-004](decisiones/ADR-004-pedido-inmutable-en-monto-y-moneda.md), **Propuesto**) y E21 (R6: SEO `hreflang`, `x-default`, `metadataBase`). Ejecutor recomendado: Sonnet en ambos. Lanzar con Claude en vez de Codex exige el sí del propietario.
+  2. Encargos `listo`, sin lanzar: E20 (R2: un pedido no cambia de moneda ni monto; sin migración; requiere [ADR-004](decisiones/ADR-004-pedido-inmutable-en-monto-y-moneda.md) **Aprobado** 2026-11-27) y E21 (R6: SEO `hreflang`, `x-default`, `metadataBase`). Ejecutor recomendado: Sonnet en ambos. Lanzar con Claude en vez de Codex exige el sí del propietario.
   3. El enlace al tutorial del README **no se pondrá** (decisión del propietario).
 - **Última bitácora:** `privado/bitacora/2026-11-27-1500-f6-f8-e19-reintentar-integrado.md` (privada).
 

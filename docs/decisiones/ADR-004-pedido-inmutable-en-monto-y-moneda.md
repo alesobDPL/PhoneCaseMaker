@@ -2,7 +2,7 @@
 
 [Decisiones](README.md) · [Inicio](../00-inicio.md)
 
-**Estado:** Propuesto (2026-11-27). Modifica la decisión D4 del [spec de F6–F8](../superpowers/specs/2026-11-25-idiomas-pedidos-multimoneda-design.md) en lo que toca a reutilizar pedidos sin pagar. Complementa [ADR-002](ADR-002-multimoneda-lista-fija-unidad-menor.md), que no cambia.
+**Estado:** Aprobado por el propietario (2026-11-27). Modifica la decisión D4 del [spec de F6–F8](../superpowers/specs/2026-11-25-idiomas-pedidos-multimoneda-design.md) en lo que toca a reutilizar pedidos sin pagar. Complementa [ADR-002](ADR-002-multimoneda-lista-fija-unidad-menor.md), que no cambia.
 
 ## Contexto
 
