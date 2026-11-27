@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import { localeAlternates } from "@/lib/seo";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import DemoBanner from "@/components/DemoBanner";
 import Phone from "@/components/Phone";
@@ -7,6 +9,10 @@ import { getTranslations } from "next-intl/server";
 import { Reviews } from "@/components/Reviews";
 import { Link } from "@/i18n/navigation";
 import { buttonVariants } from "@/components/ui/button";
+
+export function generateMetadata(): Metadata {
+  return { alternates: localeAlternates('/') };
+}
 
 export default async function Home() {
   const t = await getTranslations('home');
