@@ -1,85 +1,76 @@
-import React from 'react'
-import MaxWidthWrapper from './MaxWidthWrapper'
-import { buttonVariants } from './ui/button';
-import { ArrowRight } from 'lucide-react';
-import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server';
-import { LoginLink, LogoutLink, RegisterLink } from '@kinde-oss/kinde-auth-nextjs/components';
-import Link from 'next/link';
-import { canViewDashboard, getAuthzEnv } from '@/lib/authz';
+import { LoginLink, LogoutLink, RegisterLink } from '@kinde-oss/kinde-auth-nextjs/components'
+import { getSessionUser } from '@/lib/auth/session'
+import { ArrowRight, Sparkles } from 'lucide-react'
+import { getTranslations } from 'next-intl/server'
+import { CurrencySwitcher } from '@/components/CurrencySwitcher'
+import LocaleSwitcher from '@/components/LocaleSwitcher'
+import MaxWidthWrapper from '@/components/MaxWidthWrapper'
+import MobileNav, { NavLink } from '@/components/MobileNav'
+import { buttonVariants } from '@/components/ui/button'
+import { CURRENCY_CONFIG } from '@/config/currencies'
+import { getAuthzEnv, isAdmin } from '@/lib/authz'
+import { getCurrencyPreference } from '@/lib/currency-preference'
+import { cn } from '@/lib/utils'
 
+export default async function Navbar() {
+  const [user, t, current, tCurrency] = await Promise.all([
+    getSessionUser(),
+    getTranslations('common.nav'),
+    getCurrencyPreference(),
+    getTranslations('common.currency'),
+  ])
+  const labels = {
+    trigger: tCurrency('changeAria', { code: CURRENCY_CONFIG[current].code }),
+    names: { usd: tCurrency('usd'), eur: tCurrency('eur'), clp: tCurrency('clp') },
+  }
+  const isSignedIn = Boolean(user)
+  const showDashboard = isAdmin(user, getAuthzEnv())
+  const link = cn(buttonVariants({ size: 'sm', variant: 'ghost' }),
+    'gap-1 text-muted-foreground duration-150 focus-visible:ring-2 aria-[current=page]:text-foreground')
 
-const Navbar = async () => {
-    
-    const {getUser} = getKindeServerSession();
-    const user = await getUser();
-  
   return (
-    <div className='sticky z-[100] h-14 inset-x-0 top-0 w-full border-b
-    border-gray-200 bg-white/75 backdrop-blur-lg transition-all'>
-    <MaxWidthWrapper>
-        <div className='flex h-14 items-center justify-between border-b
-        border-zinc-200'>
-            <a href={"/"} className='flex z-40 font-semibold'>
-                case<span className='text-green-600'>Maker</span>
-            </a>        
-            <div className='h-full flex items-center space-x-4'>
-                {user ? (
-                    <>
-                        <LogoutLink className={buttonVariants({
-                            size: "sm",
-                            variant: "ghost",
-                        })}>
-                            Sign out
-                        </LogoutLink>
-                        {canViewDashboard(user, getAuthzEnv()) ? (<>
-                            <Link href='/dashboard' className={buttonVariants({
-                            size: "sm",
-                            variant: "ghost",
-                        })}>
-                            Dashboard ✨
-                        </Link></>): null}
-                        <a 
-                        href='/configure/upload/' 
-                        className={buttonVariants({
-                            size: "sm",
-                            variant: "ghost",
-                        })}>
-                            Create case
-                            <ArrowRight className=" ml-1.5 h-5 w-5"/>
-                        </a>
-                    </>
-                ) : (<>
-                    <RegisterLink className={buttonVariants({
-                        size: "sm",
-                        variant: "ghost",
-                    })}>
-                        Sign up
-                    </RegisterLink>
-                    
-                    <LoginLink
-                    className={buttonVariants({
-                        size: "sm",
-                        variant: "ghost",
-                    })}>
-                        Login
-                    </LoginLink>
-                    <div className='h-8 w-px bg-zinc-200 hidden sm:block'/>
-                    <a 
-                        href='/configure/upload/' 
-                        className={buttonVariants({
-                            size: "sm",
-                            className: "hidden sm:flex items-center gap-1",
-                        })}>
-                            Create case
-                            <ArrowRight className=" ml-1.5 h-5 w-5"/>
-                        </a>
-                </>)}
-            </div>
-        </div>
-    </MaxWidthWrapper>
-
-    </div>
+    <header className="sticky inset-x-0 top-0 z-40 h-nav border-b bg-white/75 backdrop-blur-lg dark:bg-background/75">
+      <MaxWidthWrapper className="md:px-6 lg:px-20">
+        <nav className="flex h-full items-center justify-between gap-2">
+          <NavLink
+            href="/"
+            className="inline-flex min-h-touch min-w-touch items-center rounded-sm font-semibold text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+          >
+            {t.rich('brand', { accent: (part) => <span className="text-green-600">{part}</span> })}
+          </NavLink>
+          <div className="hidden items-center gap-2 md:flex">
+            {isSignedIn && <NavLink href="/orders" className={link}>{t('orders')}</NavLink>}
+            {showDashboard && (
+              <NavLink href="/dashboard" className={link}>
+                <Sparkles aria-hidden="true" className="size-4" />
+                {t('dashboard')}
+              </NavLink>
+            )}
+            {isSignedIn ? (
+              <LogoutLink className={link}>{t('signOut')}</LogoutLink>
+            ) : (
+              <>
+                <LoginLink className={link}>{t('signIn')}</LoginLink>
+                <RegisterLink className={link}>{t('signUp')}</RegisterLink>
+              </>
+            )}
+            <LocaleSwitcher />
+            <CurrencySwitcher current={current} labels={labels} />
+            <NavLink
+              href="/configure/upload"
+              className={cn(buttonVariants({ size: 'sm' }), 'gap-1 duration-150 focus-visible:ring-2')}
+            >
+              {t('createCase')}
+              <ArrowRight aria-hidden="true" className="size-4" />
+            </NavLink>
+          </div>
+          <MobileNav
+            isSignedIn={isSignedIn}
+            isAdmin={showDashboard}
+            currencySlot={<CurrencySwitcher variant="segmented" current={current} labels={labels} />}
+          />
+        </nav>
+      </MaxWidthWrapper>
+    </header>
   )
 }
-
-export default Navbar

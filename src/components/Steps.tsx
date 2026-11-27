@@ -2,42 +2,27 @@
 
 import { cn } from "@/lib/utils"
 import { usePathname } from "next/navigation"
+import { useTranslations } from "next-intl"
 
-const STEPS = [
-    {
-        name: "Step 1: Add image",
-        description: "Choose an image for your case",
-        url: "/upload",
-    },
-    {
-        name: "Step 2: Customize design",
-        description: "Make the case yours",
-        url: "/design",
-    },
-    {
-        name: "Step 3: Summary",
-        description: "Review your final design",
-        url: "/preview",
-    },
-]
+const STEPS = ["upload", "design", "preview"] as const
 
 const Steps = () => {
-    
     const pathname = usePathname()
+    const t = useTranslations('common.steps')
 
   return (
     <ol className="rounded-md bg-white lg:flex
     lg:rounded-none lg:border-l lg:border-r lg:border-gray-200 ">
     {STEPS.map((step,i) =>{
 
-        const isCurrent = pathname.endsWith(step.url)
+        const isCurrent = pathname.endsWith(`/${step}`)
         const isCompleted = STEPS.slice(i + 1).some((step) => 
-            pathname.endsWith(step.url)
+            pathname.endsWith(`/${step}`)
         )
 
         const imgPath = `/snake-${i + 1}.png`
 
-        return(<li key={step.name} className="relative overflow-hidden lg:flex-1">
+        return(<li key={step} className="relative overflow-hidden lg:flex-1">
             <div>
                 <span 
                     className={cn(
@@ -59,6 +44,7 @@ const Steps = () => {
                     <span className="flex-shrink-0">
                         <img
                         src={imgPath}
+                        alt=""
                         className={cn(
                            "flex h-20 w-20 object-contain items-center justify-center",
                            {
@@ -75,10 +61,10 @@ const Steps = () => {
                             "text-zinc-700":isCurrent,
 
                         })}>
-                        {step.name}
+                        {t(`${step}.name`, { number: i + 1 })}
                         </span>
                         <span className="text-sm text-zinc-500">
-                            {step.description}
+                            {t(`${step}.description`)}
                         </span>
                     </span>
                 </span>

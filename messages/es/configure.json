@@ -1,0 +1,100 @@
+{
+  "upload": {
+    "uploading": "Subiendo...",
+    "redirecting": "Redirigiendo, espera un momento...",
+    "dropFile": "Suelta el archivo",
+    "toUpload": "para subirlo",
+    "clickToUpload": "Haz clic para subir",
+    "orDragAndDrop": "o arrastra y suelta el archivo",
+    "supportedFormats": "PNG, JPG, JPEG"
+  },
+  "uploadErrors": {
+    "tooLarge": {
+      "title": "El archivo es demasiado grande.",
+      "description": "Elige una imagen de hasta 4 MB."
+    },
+    "invalidFile": {
+      "title": "El archivo de imagen no es válido.",
+      "description": "Elige una imagen PNG, JPG o JPEG de hasta 4 MB."
+    },
+    "generic": {
+      "title": "No se pudo subir el archivo.",
+      "description": "Inténtalo de nuevo."
+    },
+    "unsupportedType": {
+      "title": "Este tipo de archivo no es compatible.",
+      "description": "Elige una imagen PNG, JPG o JPEG."
+    }
+  },
+  "design": {
+    "title": "Personaliza tu funda",
+    "phoneTemplateAlt": "Plantilla del teléfono",
+    "uploadedImageAlt": "Tu imagen",
+    "selectedColor": "Color: {color}",
+    "model": "Modelo",
+    "material": "Material",
+    "finish": "Acabado",
+    "continue": "Continuar",
+    "saving": "Guardando",
+    "saveError": {
+      "title": "No se pudo guardar tu configuración",
+      "description": "Inténtalo de nuevo."
+    }
+  },
+  "options": {
+    "color": {
+      "black": "Negro",
+      "blue": "Azul",
+      "rose": "Rosa"
+    },
+    "material": {
+      "silicone": "Silicona",
+      "polycarbonate": "Policarbonato suave"
+    },
+    "finish": {
+      "smooth": "Acabado liso",
+      "textured": "Acabado texturizado"
+    },
+    "descriptions": {
+      "polycarbonate": "Recubrimiento resistente a rayones",
+      "textured": "Textura suave con buen agarre"
+    }
+  },
+  "preview": {
+    "title": "Tu {model}",
+    "inStock": "En stock y listo para enviar",
+    "highlights": {
+      "title": "Características destacadas",
+      "wirelessCharging": "Compatible con carga inalámbrica",
+      "shockAbsorption": "Absorción de impactos con TPU",
+      "recycledPackaging": "Embalaje hecho con materiales reciclados",
+      "printWarranty": "Garantía de impresión de 5 años"
+    },
+    "materials": {
+      "title": "Materiales",
+      "durable": "Material duradero de alta calidad",
+      "resistantCoating": "Recubrimiento resistente a rayones y huellas"
+    },
+    "basePrice": "Precio base",
+    "orderTotal": "Total del pedido",
+    "chargedIn": "Se cobrará en {currency}",
+    "checkout": "Pagar"
+  },
+  "checkout": {
+    "productName": "Funda de iPhone personalizada"
+  },
+  "checkoutErrors": {
+    "not_found": {
+      "title": "No se encontró la configuración",
+      "description": "Abre una configuración guardada o crea una nueva antes de pagar."
+    },
+    "invalid_currency": {
+      "title": "Moneda no disponible",
+      "description": "Elige otra moneda e inténtalo de nuevo."
+    },
+    "stripe_error": {
+      "title": "No se pudo iniciar el pago",
+      "description": "Inténtalo de nuevo."
+    }
+  }
+}

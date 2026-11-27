@@ -1,0 +1,84 @@
+{
+  "nav": {
+    "brand": "case<accent>Maker</accent>",
+    "orders": "My orders",
+    "dashboard": "Dashboard",
+    "signIn": "Sign in",
+    "signUp": "Sign up",
+    "signOut": "Sign out",
+    "createCase": "Create case",
+    "menu": "Menu",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "locale": {
+    "label": "Language",
+    "changeAria": "Change language, current: {current}",
+    "es": "Español",
+    "en": "English",
+    "esCode": "ES",
+    "enCode": "EN"
+  },
+  "currency": {
+    "label": "Currency",
+    "changeAria": "Change currency, current: {code}",
+    "usd": "US dollar",
+    "eur": "Euro",
+    "clp": "Chilean peso"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you’re looking for is unavailable.",
+    "backHome": "Back to home"
+  },
+  "meta": {
+    "title": "caseMaker",
+    "description": "Create a custom phone case with your image."
+  },
+  "footer": {
+    "copyright": "© {year} All rights reserved",
+    "terms": "Terms",
+    "privacy": "Privacy Policy",
+    "cookies": "Cookie policy"
+  },
+  "steps": {
+    "upload": {
+      "name": "Step {number}: Add image",
+      "description": "Choose an image for your case"
+    },
+    "design": {
+      "name": "Step {number}: Customize design",
+      "description": "Make the case yours"
+    },
+    "preview": {
+      "name": "Step {number}: Summary",
+      "description": "Review your final design"
+    }
+  },
+  "dialog": {
+    "close": "Close"
+  },
+  "loginModal": {
+    "imageAlt": "Snake illustration",
+    "title": "Log in to continue",
+    "description": "<saved>Your configuration was saved!</saved> Please log in or create an account to complete your purchase.",
+    "login": "Login",
+    "register": "Sign up"
+  },
+  "demoBanner": {
+    "ariaLabel": "Demo mode",
+    "message": "<label>Demo mode.</label> This is a demo. Use test card <card>4242 4242 4242 4242</card> with any future date and any CVC.",
+    "dashboardLink": "Try the admin dashboard"
+  },
+  "phone": {
+    "templateAlt": "Phone template",
+    "overlayAlt": "Image on the phone case"
+  },
+  "authCallback": {
+    "title": "Logging you in...",
+    "description": "You will be redirected automatically",
+    "errorTitle": "Could not sign you in",
+    "errorDescription": "Sign in again to continue.",
+    "retry": "Sign in again"
+  }
+}

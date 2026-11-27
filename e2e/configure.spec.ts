@@ -1,24 +1,41 @@
-import { UPLOAD_ERROR_MESSAGES } from '../src/lib/upload-errors'
+import enCommon from '../messages/en/common.json'
+import en from '../messages/en/configure.json'
+import esCommon from '../messages/es/common.json'
+import es from '../messages/es/configure.json'
 import { expect, test } from './fixtures'
 
-test('home shows demo banner with test card when DEMO_MODE', async ({ page }) => {
-  test.skip(process.env.DEMO_MODE !== 'true', 'Requires DEMO_MODE=true')
-  await page.goto('/')
+test.use({ locale: 'en-US' })
 
-  const banner = page.getByRole('complementary', { name: 'Demo mode' })
-  await expect(banner).toBeVisible()
-  await expect(banner).toContainText('4242 4242 4242 4242')
-  await expect(banner).toContainText('any future date and any CVC')
-  await expect(banner.getByRole('link', { name: 'Try the admin dashboard' }))
-    .toHaveAttribute('href', '/dashboard')
+test.describe('Spanish configurator', () => {
+  test.use({ locale: 'es-CL' })
+
+  test('upload page renders the dropzone', async ({ page }) => {
+    await page.goto('/es/configure/upload')
+
+    await expect(page.getByText(es.upload.clickToUpload, { exact: true })).toBeVisible()
+    await expect(page.getByText(es.upload.orDragAndDrop)).toBeVisible()
+    await expect(page.locator('input[type="file"]')).toHaveAttribute('accept', /image\/png/)
+  })
+
+  test('preview displays the CLP total without decimals', async ({ page, context, baseURL, configurationId }) => {
+    await context.addCookies([{ name: 'CURRENCY', value: 'clp', url: new URL('/', baseURL).href }])
+    await page.goto(`/es/configure/preview?id=${configurationId}`)
+
+    const total = page.getByText(es.preview.orderTotal, { exact: true }).locator('..')
+    await expect(total).toContainText('21.970')
+    await expect(total).not.toContainText(',00')
+    await expect(page.getByText(es.preview.chargedIn.replace('{currency}', 'CLP'))).toBeVisible()
+  })
 })
 
-test('upload page renders the dropzone', async ({ page }) => {
-  await page.goto('/configure/upload')
+test('preview displays the EUR total and checkout currency', async ({ page, context, baseURL, configurationId }) => {
+  await context.addCookies([{ name: 'CURRENCY', value: 'eur', url: new URL('/', baseURL).href }])
+  await page.goto(`/en/configure/preview?id=${configurationId}`)
 
-  await expect(page.getByText('Click to upload')).toBeVisible()
-  await expect(page.getByText('or drag and drop')).toBeVisible()
-  await expect(page.locator('input[type="file"]')).toHaveAttribute('accept', /image\/png/)
+  const total = page.getByText(en.preview.orderTotal, { exact: true }).locator('..')
+  await expect(total).toContainText('21.00')
+  await expect(page.getByText(en.preview.chargedIn.replace('{currency}', 'EUR'))).toBeVisible()
+  await expect(page.getByText(en.options.material.polycarbonate, { exact: true })).toBeVisible()
 })
 
 test('upload page shows an error and resets the dropzone after a failed upload', async ({ page }) => {
@@ -30,7 +47,7 @@ test('upload page shows an error and resets the dropzone after a failed upload',
     }
   })
 
-  await page.goto('/configure/upload')
+  await page.goto('/en/configure/upload')
   await page.locator('input[type="file"]').setInputFiles({
     name: 'image.png',
     mimeType: 'image/png',
@@ -40,18 +57,42 @@ test('upload page shows an error and resets the dropzone after a failed upload',
     ),
   })
 
-  await expect(page.getByText(UPLOAD_ERROR_MESSAGES.generic.title, { exact: true })).toBeVisible()
-  await expect(page.getByText('Click to upload', { exact: true })).toBeVisible()
+  await expect(page.getByText(en.uploadErrors.generic.title, { exact: true })).toBeVisible()
+  await expect(page.getByText(en.upload.clickToUpload, { exact: true })).toBeVisible()
 })
 
-test('preview without session opens the login modal', async ({ page, configurationId }) => {
-  await page.goto(`/configure/preview?id=${configurationId}`)
+const languages = [
+  { locale: 'es', browserLocale: 'es-CL', common: esCommon, configure: es },
+  { locale: 'en', browserLocale: 'en-US', common: enCommon, configure: en },
+]
 
-  await expect(page.getByRole('heading', { name: 'Your iPhone 15' })).toBeVisible()
-  await page.getByRole('button', { name: 'Check out' }).click()
-  const dialog = page.getByRole('dialog', { name: 'Log in to continue' })
-  await expect(dialog).toBeVisible()
-  await expect(dialog).toContainText('Your configuration was saved!')
-  await expect.poll(() => page.evaluate(() => localStorage.getItem('configurationId')))
-    .toBe(configurationId)
-})
+for (const { locale, browserLocale, common, configure } of languages) {
+  test.describe(`${locale} demo banner and login modal`, () => {
+    test.use({ locale: browserLocale })
+
+    test('home shows demo banner with test card when DEMO_MODE', async ({ page }) => {
+      test.skip(process.env.DEMO_MODE !== 'true', 'Requires DEMO_MODE=true')
+      await page.goto(`/${locale}`)
+
+      const banner = page.getByRole('complementary', { name: common.demoBanner.ariaLabel })
+      await expect(banner).toBeVisible()
+      await expect(banner).toContainText(common.demoBanner.message.replace(/<\/?(?:label|card)>/g, ''))
+      await expect(banner.getByRole('link', { name: common.demoBanner.dashboardLink }))
+        .toHaveAttribute('href', `/${locale}/dashboard`)
+    })
+
+    test('preview without session opens the login modal', async ({ page, configurationId }) => {
+      await page.goto(`/${locale}/configure/preview?id=${configurationId}`)
+
+      await expect(page.getByRole('heading', {
+        name: configure.preview.title.replace('{model}', 'iPhone 15'),
+      })).toBeVisible()
+      await page.getByRole('button', { name: configure.preview.checkout }).click()
+      const dialog = page.getByRole('dialog', { name: common.loginModal.title })
+      await expect(dialog).toBeVisible()
+      await expect(dialog).toContainText(common.loginModal.description.replace(/<\/?saved>/g, ''))
+      await expect.poll(() => page.evaluate(() => localStorage.getItem('configurationId')))
+        .toBe(configurationId)
+    })
+  })
+}

@@ -1,8 +1,8 @@
 import { mockKindeUser } from '../helpers/auth'
 import { beforeEach, describe, expect, it } from 'vitest'
 import { db } from '@/db'
-import { createOrder, createUser, resetDb } from '../helpers/db'
-import { getPaymentStatus } from '@/app/thank-you/actions'
+import { createConfiguration, createOrder, createUser, resetDb } from '../helpers/db'
+import { getPaymentStatus } from '@/app/[locale]/thank-you/actions'
 import { getOrderSummary } from '@/lib/orders/get-order-summary'
 import { parseOrderIdParam } from '@/lib/orders/parse-order-id-param'
 
@@ -43,6 +43,16 @@ describe('thank-you order access', () => {
     await db.order.update({ where: { id: order.id }, data: { isPaid: true } })
     expect(await getPaymentStatus({ orderId: order.id })).toEqual({ isPaid: true })
     expect((await getOrderSummary(order.id, user.id)).isPaid).toBe(true)
+  })
+
+  it('returns the CLP amount in minor units for a textured polycarbonate case', async () => {
+    const configuration = await createConfiguration({ material: 'polycarbonate', finish: 'textured' })
+    const order = await createOrder({ configurationId: configuration.id, currency: 'clp' })
+
+    expect(await getOrderSummary(order.id, order.userId)).toMatchObject({
+      currency: 'clp',
+      amountCents: 21_970,
+    })
   })
 
   it("other user's order is not found", async () => {

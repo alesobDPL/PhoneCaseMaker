@@ -1,0 +1,49 @@
+{
+  "title": "Mis pedidos",
+  "manualStatusNote": "El estado de envío lo actualiza la tienda manualmente.",
+  "signedOut": {
+    "title": "Inicia sesión para ver tus pedidos",
+    "description": "Usa la cuenta con la que hiciste tus compras.",
+    "signIn": "Iniciar sesión"
+  },
+  "empty": {
+    "title": "Todavía no tienes pedidos",
+    "description": "Cuando completes una compra, aparecerá aquí.",
+    "createCase": "Crear mi funda"
+  },
+  "loading": "Cargando pedidos",
+  "error": {
+    "message": "No pudimos cargar tus pedidos.",
+    "retry": "Reintentar"
+  },
+  "card": {
+    "title": "Funda para {model}",
+    "unknownModelTitle": "Funda personalizada",
+    "number": "#{id}",
+    "options": "{material} · {finish} · {color}",
+    "preview": "Vista previa de la funda",
+    "previewUnavailable": "Vista previa de la funda no disponible"
+  },
+  "viewSummary": "Ver resumen",
+  "status": {
+    "awaiting_shipment": "Preparando envío",
+    "shipped": "Enviado",
+    "fulfilled": "Entregado"
+  },
+  "options": {
+    "unspecified": "Sin especificar",
+    "color": {
+      "black": "Negro",
+      "blue": "Azul",
+      "rose": "Rosa"
+    },
+    "material": {
+      "silicone": "Silicona",
+      "polycarbonate": "Policarbonato"
+    },
+    "finish": {
+      "smooth": "Liso",
+      "textured": "Texturizado"
+    }
+  }
+}

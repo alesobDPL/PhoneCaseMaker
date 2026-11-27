@@ -1,10 +1,15 @@
 import type { Configuration } from '@prisma/client'
-import { BASE_PRICE, PRODUCT_PRICES } from '@/config/products'
+import type { Currency } from '@/config/currencies'
+import { PRICE_LIST } from '@/config/products'
 
-export function calculatePriceCents(
+export function calculatePrice(
   configuration: Pick<Configuration, 'material' | 'finish'>,
-): number {
-  return BASE_PRICE
-    + PRODUCT_PRICES.material[configuration.material ?? 'silicone']
-    + PRODUCT_PRICES.finish[configuration.finish ?? 'smooth']
+  currency: Currency,
+): { amount: number; currency: Currency } {
+  const { base, material, finish } = PRICE_LIST[currency]
+  const amount = base
+    + material[configuration.material ?? 'silicone']
+    + finish[configuration.finish ?? 'smooth']
+
+  return { amount, currency }
 }

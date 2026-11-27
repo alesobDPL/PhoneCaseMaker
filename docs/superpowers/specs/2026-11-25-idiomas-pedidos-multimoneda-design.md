@@ -44,7 +44,7 @@ Que el proyecto destaque como portafolio con tres mejoras:
 
 - `next-intl` (única dependencia nueva del proyecto en este spec). Segmento `src/app/[locale]/`, `localePrefix: 'always'`, idiomas `es` (defecto) y `en`.
 - Detección en `/`: cookie `NEXT_LOCALE`, luego `Accept-Language`, luego `es`. Cambiar de idioma escribe la cookie.
-- `middleware.ts` en la raíz con matcher que **excluye** `api/**` (Kinde `/api/auth/*`, UploadThing, webhook de Stripe), `_next/**` y archivos con extensión.
+- `src/middleware.ts` (con `src/app`, Next.js 15 lo busca en `src/`, no en la raíz) con matcher que **excluye** `api/**` (Kinde `/api/auth/*`, UploadThing, webhook de Stripe), `_next/**` y archivos con extensión.
 - Todas las páginas pasan a `src/app/[locale]/…`, incluidas `auth-callback` y `thank-you`. `KINDE_POST_LOGIN_REDIRECT_URL` no cambia: `/auth-callback` se redirige a `/{locale}/auth-callback` conservando la query.
 - `<html lang>` toma el idioma; metadata por idioma con `alternates.languages` (`hreflang` es/en).
 - Stripe Checkout recibe `locale: 'es' | 'en'`; `success_url` y `cancel_url` llevan el prefijo del idioma.
@@ -264,7 +264,7 @@ Regla: dentro de un lote ningún archivo pertenece a dos encargos. Cada lote se 
 
 | Encargo | Archivos de los que es dueño |
 |---|---|
-| **A · Base de idiomas** | `package.json`, `package-lock.json`, `next.config.*`, `middleware.ts`, `src/i18n/**`, `src/app/layout.tsx`, `src/app/[locale]/layout.tsx`, `src/app/[locale]/not-found.tsx`, `src/app/globals.css`, `tailwind.config.ts`, traslado (solo mover, sin traducir) de todas las páginas de `src/app/*` a `src/app/[locale]/*`, `src/components/Navbar.tsx`, `src/components/MobileNav.tsx`, `src/components/LocaleSwitcher.tsx`, `src/components/ui/sheet.tsx`, todos los `messages/{es,en}/*.json` (`common` poblado con las claves de §4.4; el resto `{}`), `tests/unit/messages.test.ts`, `e2e/**` (ajuste de rutas al prefijo) |
+| **A · Base de idiomas** | `package.json`, `package-lock.json`, `next.config.*`, `src/middleware.ts`, `src/i18n/**`, `src/app/layout.tsx`, `src/app/[locale]/layout.tsx`, `src/app/[locale]/not-found.tsx`, `src/app/globals.css`, `tailwind.config.ts`, traslado (solo mover, sin traducir) de todas las páginas de `src/app/*` a `src/app/[locale]/*`, `src/components/Navbar.tsx`, `src/components/MobileNav.tsx`, `src/components/LocaleSwitcher.tsx`, `src/components/ui/sheet.tsx`, todos los `messages/{es,en}/*.json` (`common` poblado con las claves de §4.4; el resto `{}`), `tests/unit/messages.test.ts`, `e2e/**` (ajuste de rutas al prefijo) |
 | **B · Base de dinero** | `prisma/schema.prisma`, `prisma/migrations/**` (nueva), `prisma/seed.ts`, `src/config/products.ts`, `src/config/currencies.ts`, `src/lib/pricing.ts`, `src/lib/money.ts`, `src/lib/currency-preference.ts`, `src/app/actions/set-currency.ts`, `src/components/CurrencySwitcher.tsx` (usa las claves `common.currency.*` fijadas en §4.4, sin montarlo en el navbar), `tests/unit/pricing.test.ts`, `tests/unit/money.test.ts` |
 
 Orden de integración: B primero (no toca rutas), luego A rebasado sobre B. `src/app/actions/` queda fuera de `[locale]` porque no es una página.

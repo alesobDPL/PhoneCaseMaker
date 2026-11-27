@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import type { Order } from '@prisma/client'
 import type Stripe from 'stripe'
 import { db } from '@/db'
 import { createOrder, resetDb } from '../helpers/db'
@@ -6,14 +7,21 @@ import { signedStripeRequest } from '../helpers/stripe'
 import { POST } from '@/app/api/webhooks/route'
 import { handleCheckoutCompleted } from '@/lib/orders/handle-checkout-completed'
 
-function completedEvent(orderId?: string, userId?: string) {
+type CheckoutOrder = Pick<Order, 'id' | 'userId' | 'amountCents' | 'currency'>
+
+function completedEvent(
+  order: CheckoutOrder,
+  metadata: { orderId: string; userId: string } | null = { orderId: order.id, userId: order.userId },
+) {
   return {
     id: 'evt_checkout_completed',
     type: 'checkout.session.completed',
     data: {
       object: {
         id: 'cs_test_checkout',
-        metadata: orderId ? { orderId, userId } : null,
+        metadata,
+        amount_total: order.amountCents,
+        currency: order.currency,
         customer_details: {
           name: 'Billing Customer',
           email: 'customer@example.com',
@@ -34,8 +42,8 @@ function completedEvent(orderId?: string, userId?: string) {
   }
 }
 
-function collectedCompletedEvent(orderId?: string, userId?: string) {
-  const event = completedEvent(orderId, userId)
+function collectedCompletedEvent(order: CheckoutOrder) {
+  const event = completedEvent(order)
   const { shipping_details, ...session } = event.data.object
   return {
     ...event,
@@ -67,7 +75,7 @@ describe('checkout webhook', () => {
 
   it('marks the order paid and stores both addresses', async () => {
     const order = await createOrder()
-    const response = await POST(signedStripeRequest(completedEvent(order.id, order.userId)))
+    const response = await POST(signedStripeRequest(completedEvent(order)))
 
     expect(response.status).toBe(200)
     const paid = await db.order.findUniqueOrThrow({
@@ -82,7 +90,7 @@ describe('checkout webhook', () => {
 
   it('stores collected shipping and customer billing addresses without root shipping_details', async () => {
     const order = await createOrder()
-    const event = collectedCompletedEvent(order.id, order.userId)
+    const event = collectedCompletedEvent(order)
     expect(event.data.object).not.toHaveProperty('shipping_details')
     const response = await POST(signedStripeRequest(event))
 
@@ -101,10 +109,10 @@ describe('checkout webhook', () => {
 
   it('prefers collected shipping details when both formats are present', async () => {
     const order = await createOrder()
-    const event = collectedCompletedEvent(order.id, order.userId)
+    const event = collectedCompletedEvent(order)
     const session = {
       ...event.data.object,
-      shipping_details: completedEvent(order.id, order.userId).data.object.shipping_details,
+      shipping_details: completedEvent(order).data.object.shipping_details,
     }
     const response = await POST(signedStripeRequest({ ...event, data: { object: session } }))
 
@@ -124,7 +132,7 @@ describe('checkout webhook', () => {
   it.each(['sequential', 'simultaneous'] as const)(
     'same event twice keeps one set of addresses (%s)', async (delivery) => {
       const order = await createOrder()
-      const event = completedEvent(order.id, order.userId)
+      const event = completedEvent(order)
       const deliver = () => POST(signedStripeRequest(event))
       const responses = delivery === 'simultaneous'
         ? await Promise.all([deliver(), deliver()])
@@ -140,7 +148,7 @@ describe('checkout webhook', () => {
   it.each(['sequential', 'simultaneous'] as const)(
     'same collected event twice keeps one set of addresses (%s)', async (delivery) => {
       const order = await createOrder()
-      const event = collectedCompletedEvent(order.id, order.userId)
+      const event = collectedCompletedEvent(order)
       const deliver = () => POST(signedStripeRequest(event))
       const responses = delivery === 'simultaneous'
         ? await Promise.all([deliver(), deliver()])
@@ -162,7 +170,7 @@ describe('checkout webhook', () => {
 
   it('invalid signature returns 400 and writes nothing', async () => {
     const order = await createOrder()
-    const response = await POST(signedStripeRequest(completedEvent(order.id, order.userId), 'whsec_wrong'))
+    const response = await POST(signedStripeRequest(completedEvent(order), 'whsec_wrong'))
     expect(response.status).toBe(400)
     await expectNoPaymentWrites(order.id)
   })
@@ -170,7 +178,7 @@ describe('checkout webhook', () => {
   it('missing signature returns 400 and writes nothing', async () => {
     const order = await createOrder()
     const response = await POST(new Request('http://localhost/api/webhooks', {
-      method: 'POST', body: JSON.stringify(completedEvent(order.id, order.userId)),
+      method: 'POST', body: JSON.stringify(completedEvent(order)),
     }))
     expect(response.status).toBe(400)
     await expectNoPaymentWrites(order.id)
@@ -178,13 +186,13 @@ describe('checkout webhook', () => {
 
   it('missing metadata returns 200 and writes nothing', async () => {
     const order = await createOrder()
-    expect((await POST(signedStripeRequest(completedEvent()))).status).toBe(200)
+    expect((await POST(signedStripeRequest(completedEvent(order, null)))).status).toBe(200)
     await expectNoPaymentWrites(order.id)
   })
 
   it('unknown orderId returns 200 and writes nothing', async () => {
     const order = await createOrder()
-    const event = completedEvent('missing-order', order.userId)
+    const event = completedEvent({ ...order, id: 'missing-order' })
     expect((await POST(signedStripeRequest(event))).status).toBe(200)
     expect(await db.order.count()).toBe(1)
     await expectNoPaymentWrites(order.id)
@@ -192,7 +200,7 @@ describe('checkout webhook', () => {
 
   it('session without shipping_details marks paid without addresses', async () => {
     const order = await createOrder()
-    const event = completedEvent(order.id, order.userId)
+    const event = completedEvent(order)
     const session = { ...event.data.object, shipping_details: null, collected_information: null }
     const response = await POST(signedStripeRequest({ ...event, data: { object: session } }))
     expect(response.status).toBe(200)
@@ -204,7 +212,7 @@ describe('checkout webhook', () => {
 
   it('other event types return 200', async () => {
     const order = await createOrder()
-    const event = { ...completedEvent(order.id, order.userId), type: 'payment_intent.succeeded' }
+    const event = { ...completedEvent(order), type: 'payment_intent.succeeded' }
     expect((await POST(signedStripeRequest(event))).status).toBe(200)
     await expectNoPaymentWrites(order.id)
   })
@@ -212,17 +220,47 @@ describe('checkout webhook', () => {
   it('unexpected database errors return 500 and write nothing', async () => {
     const order = await createOrder()
     vi.spyOn(db, '$transaction').mockRejectedValueOnce(new Error('Database unavailable'))
-    expect((await POST(signedStripeRequest(completedEvent(order.id, order.userId)))).status).toBe(500)
+    expect((await POST(signedStripeRequest(completedEvent(order)))).status).toBe(500)
     await expectNoPaymentWrites(order.id)
   })
 
   it('returns the handler result for paid, repeated and ignored sessions', async () => {
     const order = await createOrder()
-    const session = completedEvent(order.id, order.userId).data.object as unknown as Stripe.Checkout.Session
+    const session = completedEvent(order).data.object as unknown as Stripe.Checkout.Session
     expect(await handleCheckoutCompleted(session, db)).toBe('paid')
     expect(await handleCheckoutCompleted(session, db)).toBe('already_processed')
     expect(await handleCheckoutCompleted({ ...session, metadata: null }, db)).toBe('ignored')
     expect(await handleCheckoutCompleted({ ...session, metadata: { orderId: 'missing-order', userId: order.userId } }, db))
       .toBe('ignored')
+  })
+
+  it.each([
+    ['amount', 1401, 'usd'],
+    ['currency', 1400, 'eur'],
+  ])('ignores a mismatched %s and accepts a matching event later', async (_, amountCents, currency) => {
+    const order = await createOrder()
+    const event = completedEvent({ ...order, amountCents, currency })
+    const session = event.data.object as unknown as Stripe.Checkout.Session
+    const log = vi.spyOn(console, 'error').mockImplementation(() => undefined)
+
+    expect(await handleCheckoutCompleted(session, db)).toBe('mismatch')
+    await expectNoPaymentWrites(order.id)
+
+    expect((await POST(signedStripeRequest(event))).status).toBe(200)
+    await expectNoPaymentWrites(order.id)
+    expect(log).toHaveBeenCalledExactlyOnceWith(expect.any(String), {
+      orderId: order.id,
+      expectedAmount: order.amountCents,
+      expectedCurrency: order.currency,
+      receivedAmount: amountCents,
+      receivedCurrency: currency,
+    })
+
+    const matching = { ...completedEvent(order), id: 'evt_checkout_matched' }
+    expect((await POST(signedStripeRequest(matching))).status).toBe(200)
+    expect(await db.order.findUniqueOrThrow({ where: { id: order.id } })).toMatchObject({ isPaid: true })
+    expect(await db.shippingAddress.count()).toBe(1)
+    expect(await db.billingAddress.count()).toBe(1)
+    expect(await handleCheckoutCompleted(session, db)).toBe('already_processed')
   })
 })

@@ -2,7 +2,23 @@
   "extends": "next/core-web-vitals",
   "rules" : {
     "react/no-unescaped-entities" : "off",
-    "@next/next/no-img-element" : "off"
-  }
-
+    "@next/next/no-img-element" : "off",
+    "no-restricted-imports": ["error", {
+      "paths": [{
+        "name": "@kinde-oss/kinde-auth-nextjs/server",
+        "importNames": ["getKindeServerSession"],
+        "message": "Usa getSessionUser de @/lib/auth/session."
+      }, {
+        "name": "@kinde-oss/kinde-auth-nextjs",
+        "importNames": ["useKindeBrowserClient", "useKindeAuth"],
+        "message": "Usa getSessionUser de @/lib/auth/session en el servidor."
+      }]
+    }]
+  },
+  "overrides": [{
+    "files": ["src/app/api/auth/**"],
+    "rules": {
+      "no-restricted-imports": "off"
+    }
+  }]
 }
