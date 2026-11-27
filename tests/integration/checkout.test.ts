@@ -2,6 +2,8 @@ import { mockKindeUser } from '../helpers/auth'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type Stripe from 'stripe'
 import { db } from '@/db'
+import { handleCheckoutCompleted } from '@/lib/orders/handle-checkout-completed'
+import { calculatePrice } from '@/lib/pricing'
 import { stripe } from '@/lib/stripe'
 import { createConfiguration, createOrder, createUser, resetDb } from '../helpers/db'
 import { createCheckoutSession } from '@/app/[locale]/configure/preview/actions'
@@ -23,26 +25,96 @@ describe('checkout session', () => {
   })
   afterEach(() => vi.restoreAllMocks())
 
-  it('reuses an unpaid order for the same user and configuration', async () => {
+  it('creates a new order and leaves the unpaid one intact when the currency changes', async () => {
+    const user = await createUser()
+    const configuration = await createConfiguration({ material: 'polycarbonate', finish: 'textured' })
+    const original = await createOrder({ userId: user.id, configurationId: configuration.id, currency: 'usd' })
+    mockKindeUser(user)
+    cookieStore.get.mockReturnValue({ value: 'eur' })
+
+    expect(await createCheckoutSession({ configId: configuration.id, locale: 'es' }))
+      .toEqual({ url: 'https://checkout.stripe.com/test' })
+
+    const orders = await db.order.findMany({ where: { userId: user.id, configurationId: configuration.id } })
+    expect(orders).toHaveLength(2)
+    const created = orders.find(({ id }) => id !== original.id)!
+    const eur = calculatePrice(configuration, 'eur')
+    expect(created).toMatchObject({ currency: 'eur', amountCents: eur.amount, isPaid: false })
+    expect(await db.order.findUniqueOrThrow({ where: { id: original.id } }))
+      .toMatchObject({ currency: original.currency, amountCents: original.amountCents, isPaid: false })
+    expect(stripe.checkout.sessions.create).toHaveBeenCalledWith(expect.objectContaining({
+      metadata: { userId: user.id, orderId: created.id },
+      line_items: [expect.objectContaining({
+        price_data: expect.objectContaining({ currency: 'eur', unit_amount: eur.amount }),
+      })],
+    }))
+  })
+
+  it.each([
+    ['usd cookie', { value: 'usd' }],
+    ['no cookie', undefined],
+  ] as const)('reuses an unpaid order unchanged with the same currency and amount (%s)', async (_label, cookie) => {
     const user = await createUser()
     const configuration = await createConfiguration({ material: 'polycarbonate', finish: 'textured' })
     await createOrder({ configurationId: configuration.id })
     await createOrder({ userId: user.id })
     const order = await createOrder({ userId: user.id, configurationId: configuration.id, currency: 'usd' })
     mockKindeUser(user)
-    cookieStore.get.mockReturnValue({ value: 'clp' })
-    vi.mocked(stripe.checkout.sessions.create).mockImplementationOnce(async () => {
-      expect(await db.order.findUniqueOrThrow({ where: { id: order.id } }))
-        .toMatchObject({ currency: 'clp', amountCents: 21970 })
-      return { url: 'https://checkout.stripe.com/test' } as Stripe.Response<Stripe.Checkout.Session>
-    })
+    cookieStore.get.mockReturnValue(cookie)
 
     expect(await createCheckoutSession({ configId: configuration.id, locale: 'es' }))
       .toEqual({ url: 'https://checkout.stripe.com/test' })
     expect(await db.order.count()).toBe(3)
+    expect(await db.order.findUniqueOrThrow({ where: { id: order.id } }))
+      .toMatchObject({ currency: order.currency, amountCents: order.amountCents, isPaid: false })
     expect(stripe.checkout.sessions.create).toHaveBeenCalledWith(expect.objectContaining({
       metadata: { userId: user.id, orderId: order.id },
     }))
+  })
+
+  it('creates a new order at the current price when the unpaid one has a different amount', async () => {
+    const user = await createUser()
+    const configuration = await createConfiguration({ material: 'polycarbonate', finish: 'textured' })
+    const current = calculatePrice(configuration, 'usd').amount
+    const stale = await createOrder({
+      userId: user.id, configurationId: configuration.id, currency: 'usd', amountCents: current + 100,
+    })
+    mockKindeUser(user)
+    cookieStore.get.mockReturnValue({ value: 'usd' })
+
+    await createCheckoutSession({ configId: configuration.id, locale: 'es' })
+
+    const orders = await db.order.findMany({ where: { userId: user.id, configurationId: configuration.id } })
+    expect(orders).toHaveLength(2)
+    const created = orders.find(({ id }) => id !== stale.id)!
+    expect(created).toMatchObject({ currency: 'usd', amountCents: current, isPaid: false })
+    expect(await db.order.findUniqueOrThrow({ where: { id: stale.id } }))
+      .toMatchObject({ currency: 'usd', amountCents: current + 100, isPaid: false })
+    expect(stripe.checkout.sessions.create).toHaveBeenCalledWith(expect.objectContaining({
+      metadata: { userId: user.id, orderId: created.id },
+    }))
+  })
+
+  it('marks the first order paid when its Stripe session is paid after switching currency', async () => {
+    const user = await createUser()
+    const configuration = await createConfiguration({ material: 'polycarbonate', finish: 'textured' })
+    const first = await createOrder({ userId: user.id, configurationId: configuration.id, currency: 'usd' })
+    mockKindeUser(user)
+    cookieStore.get.mockReturnValue({ value: 'eur' })
+
+    await createCheckoutSession({ configId: configuration.id, locale: 'es' })
+    const second = (await db.order.findMany({ where: { userId: user.id, configurationId: configuration.id } }))
+      .find(({ id }) => id !== first.id)!
+
+    const session = {
+      id: 'cs_test_checkout',
+      metadata: { orderId: first.id, userId: user.id },
+      amount_total: first.amountCents,
+      currency: 'usd',
+    } as unknown as Stripe.Checkout.Session
+    expect(await handleCheckoutCompleted(session, db)).toBe('paid')
+    expect(await db.order.findUniqueOrThrow({ where: { id: first.id } })).toMatchObject({ isPaid: true })
+    expect(await db.order.findUniqueOrThrow({ where: { id: second.id } })).toMatchObject({ isPaid: false })
   })
 
   it('creates a new order when the previous one is paid', async () => {

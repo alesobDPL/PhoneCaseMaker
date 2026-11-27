@@ -30,17 +30,16 @@ export async function createCheckoutSession({
   const t = createTranslator({ locale, messages, namespace: 'checkout' })
 
   let orderId = (await db.order.findFirst({
-    where: { userId: user.id, configurationId: configuration.id, isPaid: false },
+    where: {
+      userId: user.id,
+      configurationId: configuration.id,
+      isPaid: false,
+      currency,
+      amountCents: amount,
+    },
+    orderBy: { createdAt: 'desc' },
     select: { id: true },
   }))?.id
-
-  if (orderId) {
-    const { count } = await db.order.updateMany({
-      where: { id: orderId, isPaid: false },
-      data: { amountCents: amount, currency },
-    })
-    if (count === 0) orderId = undefined
-  }
 
   if (!orderId) {
     const order = await db.order.create({
