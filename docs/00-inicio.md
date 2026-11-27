@@ -11,7 +11,7 @@ Configurador de fundas personalizadas: el usuario sube una imagen, la ajusta sob
 - **Bloqueos:** ninguno. Nota: con `next start` en local UploadThing falla (no alcanza localhost); usar `next dev`.
 - **Siguiente paso:**
   1. Opcional: compra de prueba en producción solo con el sí del propietario y claves de prueba; hoy el webhook real de Stripe en producción no se ha ejercitado con F6–F8.
-  2. E20 (R2) y E21 (R6) integrados en `main` el 2026-11-27 (merges c6f2fca y e205f7d), **sin push ni despliegue**. Pruebas del conjunto: build, typecheck, lint (2 advertencias previas), unit 107, integración 49 y e2e 45 (2 `fixme`). Pendiente: push, despliegue y verificar `NEXT_PUBLIC_SERVER_URL` en Vercel (alimenta `metadataBase`).
+  2. E20 (R2) y E21 (R6) integrados, publicados (push b25b520) y desplegados el 2026-11-27; `hreflang`, `x-default` y `metadataBase` verificados en producción. Sin migración. Worktrees y ramas eliminados. Mejora futura (fuera de alcance): limpiar pedidos sin pagar antiguos y expirar sesiones previas de Stripe ([ADR-004](decisiones/ADR-004-pedido-inmutable-en-monto-y-moneda.md)).
   3. El enlace al tutorial del README **no se pondrá** (decisión del propietario).
 - **Última bitácora:** `privado/bitacora/2026-11-27-1500-f6-f8-e19-reintentar-integrado.md` (privada).
 
@@ -20,8 +20,8 @@ Configurador de fundas personalizadas: el usuario sube una imagen, la ajusta sob
 | E6 webhook-direccion | — | integrado, desplegado y verificado | — (worktree y rama ya eliminados) |
 | E7 onuploaderror | — | integrado en main y desplegado | — (worktree y rama eliminados) |
 | E8 a E19 | 0 a 4 | integrados en `main` (merge 1d69aa9) y desplegados | — (worktrees y ramas eliminados) |
-| E20 pedido-por-moneda | — | integrado en `main` (c6f2fca), sin push | Push y despliegue con el sí del propietario; worktree y rama por eliminar |
-| E21 seo-hreflang | — | integrado en `main` (e205f7d), sin push | Push y despliegue con el sí del propietario; worktree y rama por eliminar |
+| E20 pedido-por-moneda | — | integrado en `main` (c6f2fca) y desplegado | — (worktree y rama eliminados) |
+| E21 seo-hreflang | — | integrado en `main` (e205f7d) y desplegado | — (worktree y rama eliminados) |
 
 E1 a E4 están integrados en `main`; E6 también (2026-11-25), ya publicado.
 
