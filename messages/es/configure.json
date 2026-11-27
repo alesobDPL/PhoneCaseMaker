@@ -80,6 +80,9 @@
     "chargedIn": "Se cobrará en {currency}",
     "checkout": "Pagar"
   },
+  "checkout": {
+    "productName": "Funda de iPhone personalizada"
+  },
   "checkoutErrors": {
     "not_found": {
       "title": "No se encontró la configuración",

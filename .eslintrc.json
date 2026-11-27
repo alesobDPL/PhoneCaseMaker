@@ -8,11 +8,15 @@
         "name": "@kinde-oss/kinde-auth-nextjs/server",
         "importNames": ["getKindeServerSession"],
         "message": "Usa getSessionUser de @/lib/auth/session."
+      }, {
+        "name": "@kinde-oss/kinde-auth-nextjs",
+        "importNames": ["useKindeBrowserClient", "useKindeAuth"],
+        "message": "Usa getSessionUser de @/lib/auth/session en el servidor."
       }]
     }]
   },
   "overrides": [{
-    "files": ["src/app/api/auth/**", "tests/unit/kinde-sdk-forged-cookie.test.ts"],
+    "files": ["src/app/api/auth/**"],
     "rules": {
       "no-restricted-imports": "off"
     }

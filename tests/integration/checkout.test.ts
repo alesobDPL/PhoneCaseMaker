@@ -82,7 +82,7 @@ describe('checkout session', () => {
         quantity: 1,
         price_data: {
           currency, unit_amount: amount,
-          product_data: { name: 'Custom iPhone Case', images: [configuration.imageUrl] },
+          product_data: { name: 'Funda de iPhone personalizada', images: [configuration.imageUrl] },
         },
       }],
     }))
@@ -90,7 +90,10 @@ describe('checkout session', () => {
     expect(await db.order.findFirstOrThrow()).toMatchObject({ currency, amountCents: amount })
   })
 
-  it.each([['en', 'en'], ['de', 'es']])('uses locale %s as %s in Stripe and return URLs', async (locale, expected) => {
+  it.each([
+    ['en', 'en', 'Custom iPhone Case'],
+    ['de', 'es', 'Funda de iPhone personalizada'],
+  ])('uses locale %s as %s in Stripe and return URLs', async (locale, expected, productName) => {
     const user = await createUser()
     const configuration = await createConfiguration()
     mockKindeUser(user)
@@ -102,6 +105,11 @@ describe('checkout session', () => {
       locale: expected,
       success_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/${expected}/thank-you?orderId=${order.id}`,
       cancel_url: `${process.env.NEXT_PUBLIC_SERVER_URL}/${expected}/configure/preview?id=${configuration.id}`,
+      line_items: [expect.objectContaining({
+        price_data: expect.objectContaining({
+          product_data: expect.objectContaining({ name: productName }),
+        }),
+      })],
     }))
   })
 

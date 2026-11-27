@@ -76,6 +76,9 @@
   },
   "authCallback": {
     "title": "Logging you in...",
-    "description": "You will be redirected automatically"
+    "description": "You will be redirected automatically",
+    "errorTitle": "Could not sign you in",
+    "errorDescription": "Sign in again to continue.",
+    "retry": "Sign in again"
   }
 }

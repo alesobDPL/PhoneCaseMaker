@@ -1,5 +1,6 @@
 'use server'
 
+import { createTranslator } from 'next-intl'
 import { getSessionUser } from '@/lib/auth/session'
 import { PRICE_LIST } from '@/config/products'
 import { db } from '@/db'
@@ -25,6 +26,8 @@ export async function createCheckoutSession({
 
   const { amount, currency } = calculatePrice(configuration, preferredCurrency)
   const locale: AppLocale = routing.locales.find(locale => locale === requestedLocale) ?? routing.defaultLocale
+  const { default: messages } = await import(`../../../../../messages/${locale}/configure.json`)
+  const t = createTranslator({ locale, messages, namespace: 'checkout' })
 
   let orderId = (await db.order.findFirst({
     where: { userId: user.id, configurationId: configuration.id, isPaid: false },
@@ -63,7 +66,7 @@ export async function createCheckoutSession({
           currency,
           unit_amount: amount,
           product_data: {
-            name: 'Custom iPhone Case',
+            name: t('productName'),
             images: [configuration.imageUrl],
           },
         },
