@@ -9,6 +9,7 @@ import Navbar from '@/components/Navbar'
 import Providers from '@/components/Providers'
 import { Toaster } from '@/components/ui/toaster'
 import { routing } from '@/i18n/routing'
+import { getMetadataBase } from '@/lib/seo'
 
 const recursive = Recursive({ subsets: ['latin'] })
 
@@ -27,7 +28,7 @@ export async function generateMetadata({ params }: LocaleParams): Promise<Metada
   return {
     title: t('title'),
     description: t('description'),
-    alternates: { languages: { es: '/es', en: '/en' } },
+    metadataBase: getMetadataBase(),
   }
 }
 
