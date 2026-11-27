@@ -12,8 +12,7 @@ Configurador de fundas personalizadas: el usuario sube una imagen, la ajusta sob
 - **Siguiente paso:**
   1. Opcional: compra de prueba en producción solo con el sí del propietario y claves de prueba; hoy el webhook real de Stripe en producción no se ha ejercitado con F6–F8.
   2. Como encargos aparte: R2 (sesión de Stripe antigua tras cambiar de moneda; migración aditiva y ADR) y R6 (SEO: `hreflang`, `x-default`, `metadataBase`).
-  3. Pendiente del propietario: rotar la contraseña de la base de desarrollo antigua en Neon (su cadena de conexión quedó visible en una sesión).
-  4. El enlace al tutorial del README **no se pondrá** (decisión del propietario).
+  3. El enlace al tutorial del README **no se pondrá** (decisión del propietario).
 - **Última bitácora:** `privado/bitacora/2026-11-27-1500-f6-f8-e19-reintentar-integrado.md` (privada).
 
 | Encargo | Lote | Estado | Siguiente paso |
