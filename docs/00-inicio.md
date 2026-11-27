@@ -10,7 +10,7 @@ Configurador de fundas personalizadas: el usuario sube una imagen, la ajusta sob
 - **Último avance:** el propietario hizo el login real con Kinde en local (`next dev`, localhost:3000): sesión, `/es/orders` (estado vacío) y subida con UploadThing funcionan. Condición H2 de E16 cumplida. `ADMIN_EMAIL` quitado de producción por el propietario.
 - **Bloqueos:** ninguno. Nota: con `next start` en local UploadThing falla (no alcanza localhost); usar `next dev`.
 - **Siguiente paso:**
-  1. Cierre de la revisión: captura manual del estado de error de Mis pedidos (guardar en `privado/fases-y-pruebas/`), prueba con teclado en Mis pedidos y Lighthouse de accesibilidad >=95 (con `npx`, sin instalar nada en el proyecto, si el propietario lo autoriza).
+  1. Cierre de la revisión: Lighthouse (Mis pedidos 96), teclado y captura del estado de error hechos (`privado/fases-y-pruebas/`). Hallazgo H3: "Reintentar" en Mis pedidos no recupera la página cuando la base vuelve (solo `reset()`, sin refrescar datos). Decidir E19 corto de corrección antes del merge.
   2. Con el propietario: compra real de prueba en EUR y CLP, migración aditiva al desplegar, y merge a `main` con su sí.
   3. Después del merge, como encargos aparte: R2 (sesión de Stripe antigua tras cambiar de moneda; migración aditiva y ADR) y R6 (SEO: `hreflang`, `x-default`, `metadataBase`).
   4. E7 `onuploaderror` integrado en `main` (2026-11-25, sin push ni despliegue). Pendiente, con el sí del propietario: limpiar worktrees y ramas de E7 a E18 (quitar antes el enlace `node_modules` de cada worktree) y publicar E7.
